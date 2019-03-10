@@ -1,0 +1,91 @@
+﻿
+#pragma kernel Transfer
+
+struct Vert{
+    float3 pos;
+    float3 vel;
+    float3 nor;
+    float3 tangent;
+    float2 uv;
+    float2 debug;
+};
+
+
+RWStructuredBuffer<Vert> _VertBuffer;
+RWStructuredBuffer<Vert> _SkeletonBuffer;
+
+int _VertBuffer_COUNT;
+int _SkeletonBuffer_COUNT;
+
+#include "../Chunks/safeID.cginc"
+#include "../Chunks/hash.cginc"
+
+int _VertsPerVert;
+int _NumVertsPerHair;
+float3 _CameraForward;
+float3 _CameraRight;
+float3 _CameraUp;
+float _Radius;
+float _Time;
+
+
+
+
+#define NR_THREADS 128
+[numthreads(NR_THREADS,1,1)]
+void Transfer (uint threadID : SV_GroupIndex, uint3 u3GroupID : SV_GroupID) {
+
+    int pID = threadID + u3GroupID.x * NR_THREADS;
+
+    int transferID = pID / 4;
+    int which = pID % 4;
+    
+    Vert s1 = _SkeletonBuffer[safeID(transferID*2,_SkeletonBuffer_COUNT)];
+    Vert s2 = _SkeletonBuffer[safeID(transferID*2+1,_SkeletonBuffer_COUNT)];
+
+
+    float3 fPos; float2 fUV; float3 fNor; float2 fDebug;
+
+
+
+
+    float3 startPos = s1.pos;
+    float3 leafDir = s2.pos - s1.pos;//-normalize(cross(s.tangent,s.nor));
+    float3 leafTan = float3(1,0,0);//normalize(cross( normalize(leafDir) * 1000 , 10000*float3(0,1,0)));
+  
+
+    if( which == 0 ){
+      fPos = s1.pos;
+      fNor = leafDir;
+    fDebug = float2( float(transferID) , 0 );
+      fUV = float2(0,0);
+    }else if( which == 1 ){
+      fPos = s1.pos + leafDir * .3 -  leafTan * _Radius * .3;
+      fNor = leafDir;
+    fDebug = float2( float(transferID) , .3 );
+      fUV = float2(1,0);
+    }else if( which == 2){
+      fPos = s1.pos + leafDir * .3  + leafTan * _Radius * .3;
+      fNor = leafDir;
+    fDebug = float2( float(transferID) , .3 );
+      fUV = float2(0,1);
+    }else{
+      fPos = s2.pos;
+      fNor = leafDir;
+    fDebug = float2( float(transferID) , 1 );
+      fUV = float2(1,1);
+
+    };
+
+
+
+
+    pID = safeID(pID,_VertBuffer_COUNT);
+
+    _VertBuffer[pID].pos    = fPos;
+    _VertBuffer[pID].uv     = fUV;
+    _VertBuffer[pID].nor    = fNor;
+    _VertBuffer[pID].debug  = fDebug;
+
+}
+

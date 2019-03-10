@@ -1,0 +1,116 @@
+﻿
+#pragma kernel Transfer
+
+struct Vert{
+    float3 pos;
+    float3 vel;
+    float3 nor;
+    float3 tangent;
+    float2 uv;
+    float2 debug;
+};
+
+RWStructuredBuffer<Vert> _VertBuffer;
+RWStructuredBuffer<Vert> _LeafBuffer;
+RWStructuredBuffer<Vert> _SkeletonBuffer;
+
+int _VertBuffer_COUNT;
+int _LeafBuffer_COUNT;
+int _SkeletonBuffer_COUNT;
+#include "../Chunks/safeID.cginc"
+#include "../Chunks/hash.cginc"
+
+int _VertsPerVert;
+int _NumVertsPerHair;
+float3 _CameraForward;
+float3 _CameraRight;
+float3 _CameraUp;
+float _Radius;
+float _Time;
+
+
+int getID( int pID ){
+  return int(((sin(float(pID)*1000) + 1)/2) * float(_SkeletonBuffer_COUNT));
+}
+
+#define NR_THREADS 128
+[numthreads(NR_THREADS,1,1)]
+void Transfer (uint threadID : SV_GroupIndex, uint3 u3GroupID : SV_GroupID) {
+
+    int pID = threadID + u3GroupID.x * NR_THREADS;
+
+    int transferID = pID / 7;
+    int which = pID % 7;
+
+
+    int sID = getID(transferID);
+    
+    Vert p1 = _LeafBuffer[safeID( transferID , _LeafBuffer_COUNT )];
+    Vert s1 = _SkeletonBuffer[safeID(sID,_SkeletonBuffer_COUNT)];
+
+
+    float3 fPos; float2 fUV; float3 fNor; float2 fDebug;
+
+    float3 c1 = cross( normalize( p1.pos - s1.pos ) , -s1.nor );
+    c1 = cross(c1, s1.nor);
+  
+    float3 y = normalize(lerp( s1.nor, normalize(c1), length(c1) * .5) );
+    float3 x = normalize(cross( y , _CameraForward ));
+    
+
+    y =  _CameraUp;
+    x =  _CameraRight;
+
+    fNor = normalize(_CameraForward);
+
+
+
+
+
+    fPos = p1.pos + .001*(float(which) * float3(1,0,0) + float(which%2) * float3(0,1,0)); 
+   
+    fDebug = float2(1,1);
+    fUV = float2(0,0);
+
+    float fR = _Radius * (hash( float(transferID) ) * .7 + .3) * ( sin(float(transferID)+_Time) + 4) / 4;
+
+    fPos = p1.pos - x * fR - y * fR - y * fR;
+
+    if( which == 0 ){
+      fPos = p1.pos - x * fR - y * fR;//- y * fR*  .8;
+      fUV = float2( 0, 1); 
+      fDebug = float2( s1.uv.x , 0 );
+    }else if( which  == 1 ){
+      fPos = p1.pos + x * fR - y * fR;//- y * fR*  .8;
+      fDebug = float2( s1.uv.x , 0 );
+      fUV = float2( 1 , 1);
+    }else if( which == 2 ){
+      fPos = p1.pos - x * fR + y * fR;//- y * fR*  .8;
+      fDebug = float2( s1.uv.x , 0 );
+      fUV = float2( 0 , 0 );
+    }else if( which == 3 ){
+      fPos = p1.pos + x * fR + y * fR ;//- y * fR*  .8;
+      fDebug = float2( s1.uv.x , 0 );
+      fUV = float2( 1 , 0 );
+    }else if( which == 4 ){
+      fPos = p1.pos - x * fR * .3+  _CameraForward * .001;
+      fDebug = float2( s1.uv.x , 1 );
+      fUV = float2( 0 , 1 );
+    }else if( which == 5 ){
+      fPos = p1.pos + x * fR * .3 + _CameraForward * .001;
+      fDebug = float2( s1.uv.x , 1 );
+      fUV = float2( 1 , 1 );
+    }else{
+      fPos = s1.pos;
+      fDebug = float2( s1.uv.x , 1 );
+      fUV = float2( .5, 0 );
+    }
+
+    pID = safeID(pID,_VertBuffer_COUNT);
+
+    _VertBuffer[pID].pos = fPos;
+    _VertBuffer[pID].uv = fUV;
+    _VertBuffer[pID].nor = fNor;
+    _VertBuffer[pID].debug = fDebug;
+
+}

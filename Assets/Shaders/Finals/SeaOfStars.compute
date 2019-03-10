@@ -1,0 +1,180 @@
+﻿
+#pragma kernel SetPositions
+#pragma kernel Simulation 
+
+struct Vert{
+    float3 pos;
+    float3 vel;
+    float3 nor;
+    float3 anchor;
+    float3 axis;
+    float  rotation;
+};
+
+RWStructuredBuffer<Vert> _VertBuffer;
+
+int _VertBuffer_COUNT;
+
+#include "../Chunks/safeID.cginc"
+#include "../Chunks/hash.cginc"
+#include "../Chunks/snoise.cginc"
+#include "../Chunks/curlNoise.cginc"
+
+float _StartWidth;
+float _StartDepth;
+float3 _CenterPos1;
+
+float3 _RO;
+float3 _RD;
+
+float3 _UrsulaPos;
+
+float _Time;
+
+
+
+float3 ring( float id  ){
+
+  float3 x = float3(1,0,0);
+  float3 y = float3(0,0,1);
+
+
+  float a = hash(id*100) * 6.28;
+
+  float r = hash(id*313.31);
+
+  float h = hash(id*341.);
+
+  r = r * r * r * (r * (r * 6 - 15) + 10); //r * r * (3 - 2 * r);
+  float3 p = _StartWidth*pow(r,.5)*(-sin( a )*x +cos(a)*y) + float3(0,1,0)*_StartDepth*(h-.5);
+
+  return p; 
+}
+
+#define NR_THREADS 128
+[numthreads(NR_THREADS,1,1)]
+void SetPositions(uint threadID : SV_GroupIndex, uint3 u3GroupID : SV_GroupID) {
+
+    int pID = threadID + u3GroupID.x * NR_THREADS;
+    int sID =safeID(pID,_VertBuffer_COUNT);
+    Vert v = _VertBuffer[sID];
+
+    float i = float(pID);
+
+    
+    float rX = (2* hash(i)  -1);
+    float rY = (2* hash(i*2)-1);
+    float rZ = (2* hash(i*3)-1);
+
+    float3 fPos =  ring(i);// rX * _StartWidth * float3(1,0,0) + rZ * _StartWidth * float3(0,0,1) + rY * _StartDepth * float3(0,1,0);
+
+
+    rX = (2* hash(i*10)  -1);
+    rY = (2* hash(i*20)-1);
+    rZ = (2* hash(i*30)-1);
+
+    v.anchor = fPos;
+    v.pos = fPos;
+    v.nor = normalize(float3(1,0,0));
+    v.axis = normalize(float3(rX,rY,rZ)); 
+    v.rotation = hash(i*100) * 6.28;
+
+    _VertBuffer[sID] = v;
+
+}
+
+
+float sdCapsule( float3 p, float3 a, float3 b, float r )
+{
+    float3 pa = p - a, ba = b - a;
+    float h = clamp( dot(pa,ba)/dot(ba,ba), 0.0, 1.0 );
+    return length( pa - ba*h ) - r;
+}
+
+
+float3 getProj( float3 pos , float3 sp , float3 ep ){
+  float3 dif = sp-ep;
+  float dot1 = dot( pos-sp , normalize(dif));
+
+  float3 proj = normalize(dif) * dot1;
+  float dotProj = dot( proj, ep-sp);
+  
+  float3 lineToPoint = pos-sp-proj;
+
+  return lineToPoint;
+}
+
+
+
+
+float4x4 rotation(float3 axis, float angle)
+{
+    axis = normalize(axis);
+    float s = sin(angle);
+    float c = cos(angle);
+    float oc = 1.0 - c;
+    
+    return float4x4(oc * axis.x * axis.x + c,           oc * axis.x * axis.y - axis.z * s,  oc * axis.z * axis.x + axis.y * s,  0.0,
+                oc * axis.x * axis.y + axis.z * s,  oc * axis.y * axis.y + c,           oc * axis.y * axis.z - axis.x * s,  0.0,
+                oc * axis.z * axis.x - axis.y * s,  oc * axis.y * axis.z + axis.x * s,  oc * axis.z * axis.z + c,           0.0,
+                0.0,                                0.0,                                0.0,                                1.0);
+}
+
+
+#define NR_THREADS 128
+[numthreads(NR_THREADS,1,1)]
+void Simulation(uint threadID : SV_GroupIndex, uint3 u3GroupID : SV_GroupID) {
+
+    int pID = threadID + u3GroupID.x * NR_THREADS;
+    int sID =safeID(pID,_VertBuffer_COUNT);
+    Vert v = _VertBuffer[sID];
+
+    float3 force = 0;
+ 
+
+    float3 d = getProj( v.pos , _RO + _RD * 100 , _RO - _RD * 100 );
+    float l = length(d);
+    
+    force += .01 * normalize(d) * -saturate(( (10 - l ) /10 ));
+
+
+    d = v.pos - _UrsulaPos;
+    l = length(d);
+    force += .01 * normalize(d) * -saturate(( (3 - l ) /3 ));
+    force += .001*curlNoise( v.pos * .1 + float3(0,_Time* .2,0));
+
+
+    float3 fAnchor = v.anchor + _CenterPos1;
+
+
+
+    force += .005*(v.pos- fAnchor);
+
+    if( length( v.pos - fAnchor ) > 5  ){
+
+        v.pos = fAnchor;
+        v.vel = float3(0,0,0);
+        force = 0;
+
+    }
+
+    //force += float3(0,1,0);
+
+    if( length(force) > 3){ force = normalize(force) * 3;}
+    if( length(v.vel) > 3){ v.vel = normalize(v.vel) * 3;}
+  
+
+    v.rotation += .04;
+
+    float4x4 rot = rotation( v.axis , v.rotation );
+    v.nor = mul( rot , float4(0,1,0,0)).xyz; ///normalize(v.vel);
+
+
+    v.vel -= force * .1;
+    v.pos += v.vel;
+    
+    v.vel *= .99;
+
+    _VertBuffer[sID] = v;
+
+}

@@ -1,0 +1,104 @@
+﻿
+#pragma kernel Transfer
+
+struct Vert{
+    float3 pos;
+    float3 vel;
+    float3 nor;
+    float3 tangent;
+    float2 uv;
+    float2 debug;
+};
+
+
+struct Particle{
+    float3 pos;
+    float3 nor;
+    float3 tangent;
+    float2 uv;
+    float debug;
+};
+
+RWStructuredBuffer<Vert> _VertBuffer;
+RWStructuredBuffer<Particle> _SkeletonBuffer;
+RWStructuredBuffer<int> _SkeletonTriangleBuffer;
+
+int _VertBuffer_COUNT;
+int _SkeletonBuffer_COUNT;
+int _SkeletonTriangleBuffer_COUNT;
+#include "../Chunks/safeID.cginc"
+
+int _VertsPerVert;
+int _NumVertsPerHair;
+float3 _CameraUp;
+float3 _CameraRight;
+float3 _CameraForward;
+float _Radius;
+
+
+#define NR_THREADS 64
+[numthreads(NR_THREADS,1,1)]
+void Transfer (uint threadID : SV_GroupIndex, uint3 u3GroupID : SV_GroupID) {
+
+    int pID = threadID + u3GroupID.x * NR_THREADS;
+
+    int triID = pID / 12;
+    int idInTri = pID % 12;
+    int whichTri = idInTri / 4;
+
+    int triDown = whichTri + (triID*3);
+    int triUp = whichTri + 1+(triID*3);
+    if (whichTri == 2){ triUp = whichTri-2+(triID*3); }
+
+    int which = pID % 4;
+
+    triUp = _SkeletonTriangleBuffer[safeID(triUp,_SkeletonTriangleBuffer_COUNT)];
+    triDown = _SkeletonTriangleBuffer[safeID(triDown,_SkeletonTriangleBuffer_COUNT)];
+
+    Particle pUp = _SkeletonBuffer[safeID(triUp, _SkeletonBuffer_COUNT )];
+    Particle pDown = _SkeletonBuffer[safeID( triDown , _SkeletonBuffer_COUNT )];
+    
+
+    float3 fPos; float2 fUV; float3 fNor; float2 fDebug;
+
+
+    float3 dir = (pUp.pos-pDown.pos) ;
+    float3 z = _CameraForward;//cross(normalize(dir), _CameraForward)
+    float3 x = cross( z , normalize(dir)) * _Radius;
+    float3 y = dir;
+  
+
+    fPos = pDown.pos;
+
+    fDebug = float2(1,1);
+    fUV = float2(0,0);
+
+    fPos = pDown.pos - x  - y ;
+
+   
+    if( which == 0 ){
+      fPos = pDown.pos - x ;
+      fUV = float2( 0, 0); 
+      fDebug = float2( float(triUp) , float(whichTri));
+    }else if( which  == 1 ){
+      fPos = pDown.pos + x ;
+      fDebug = float2( float(triUp) , float(whichTri));
+      fUV = float2( 1 , 0 );
+    }else if( which == 2 ){
+      fPos = pDown.pos - x + y;
+      fDebug = float2( float(triUp) , float(whichTri));
+      fUV = float2( 0 , 1 );
+    }else{
+      fPos = pDown.pos + x + y;
+      fDebug = float2( float(triUp) , float(whichTri));
+      fUV = float2( 1 , 1 );
+    }
+
+    pID = safeID(pID,_VertBuffer_COUNT);
+
+    _VertBuffer[pID].pos = fPos;
+    _VertBuffer[pID].uv = fUV;
+    _VertBuffer[pID].nor = _CameraForward;// fNor;
+    _VertBuffer[pID].debug = fDebug;
+
+}

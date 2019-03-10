@@ -1,0 +1,162 @@
+﻿#pragma kernel PlacePoint
+#pragma kernel GooPoint
+
+
+  struct Vert{
+
+    float3 pos;
+    float3 vel;
+    float3 nor;
+    float3 tang;
+    float2 uv;
+    float used;
+    float3 triIDs;
+    float3 triWeights;
+    float3 debug;
+
+  };
+
+
+/*struct SkinnedVert{
+  float3 pos;
+  float3 oPos;
+  float3 nor;
+  float3 tang;
+  float2 uv;
+  float2 debug;
+};*/
+
+
+struct SkinnedVert{
+
+    float3 pos;
+    float3 vel;
+    float3 nor;
+    float3 tang;
+    float2 uv;
+  
+    float used;
+  
+   
+    float3 targetPos;
+    float3 bindPos;
+    float3 bindNor;
+    float3 bindTan;
+
+    float4 boneWeights;
+    float4 boneIDs;
+
+    float debug;
+
+  };
+
+
+float4x4 _Transform;
+
+RWStructuredBuffer<Vert> _VertBuffer;
+RWStructuredBuffer<SkinnedVert> _SkinnedBuffer;
+
+int _VertBuffer_COUNT;
+int _SkinnedBuffer_COUNT;
+
+#include "../Chunks/safeID.cginc"
+
+#define NR_THREADS 128
+[numthreads(NR_THREADS,1,1)]
+void PlacePoint(uint threadID : SV_GroupIndex, uint3 u3GroupID : SV_GroupID) {
+
+  int pID = threadID + u3GroupID.x * NR_THREADS;
+
+  pID = safeID(pID,_VertBuffer_COUNT);
+  Vert vert = _VertBuffer[pID];
+
+  if( vert.used == 1){
+  SkinnedVert v0 = _SkinnedBuffer[safeID(int(vert.triIDs.x),_SkinnedBuffer_COUNT)];
+  SkinnedVert v1 = _SkinnedBuffer[safeID(int(vert.triIDs.y),_SkinnedBuffer_COUNT)];
+  SkinnedVert v2 = _SkinnedBuffer[safeID(int(vert.triIDs.z),_SkinnedBuffer_COUNT)];
+
+
+  float3 fPos  = v0.pos * vert.triWeights.x;
+         fPos += v1.pos * vert.triWeights.y;
+         fPos += v2.pos * vert.triWeights.z;
+
+  float3 fTang  = v0.tang * vert.triWeights.x;
+         fTang += v1.tang * vert.triWeights.y;
+         fTang += v2.tang * vert.triWeights.z;
+
+
+  float3 fNor  = v0.nor * vert.triWeights.x;
+         fNor += v1.nor * vert.triWeights.y;
+         fNor += v2.nor * vert.triWeights.z;
+
+
+  float2 fUV  = v0.uv * vert.triWeights.x;
+         fUV += v1.uv * vert.triWeights.y;
+         fUV += v2.uv * vert.triWeights.z;
+
+
+  vert.nor =  normalize(fNor);
+  vert.tang =  normalize(fTang);
+  vert.uv = fUV;
+
+  vert.debug = fPos.x;
+  vert.vel = vert.pos;
+  vert.pos = fPos + normalize(fNor) * .004;
+
+  vert.vel = vert.pos - vert.vel;
+  
+  _VertBuffer[pID] = vert;
+}
+}
+
+
+#define NR_THREADS 128
+[numthreads(NR_THREADS,1,1)]
+void GooPoint(uint threadID : SV_GroupIndex, uint3 u3GroupID : SV_GroupID) {
+
+  int pID = threadID + u3GroupID.x * NR_THREADS;
+
+  pID = safeID(pID,_VertBuffer_COUNT);
+  Vert vert = _VertBuffer[pID];
+
+  if( vert.used == 1){
+  SkinnedVert v0 = _SkinnedBuffer[safeID(int(vert.triIDs.x),_SkinnedBuffer_COUNT)];
+  SkinnedVert v1 = _SkinnedBuffer[safeID(int(vert.triIDs.y),_SkinnedBuffer_COUNT)];
+  SkinnedVert v2 = _SkinnedBuffer[safeID(int(vert.triIDs.z),_SkinnedBuffer_COUNT)];
+
+
+  float3 fPos  = v0.pos * vert.triWeights.x;
+         fPos += v1.pos * vert.triWeights.y;
+         fPos += v2.pos * vert.triWeights.z;
+
+  float3 fTang  = v0.tang * vert.triWeights.x;
+         fTang += v1.tang * vert.triWeights.y;
+         fTang += v2.tang * vert.triWeights.z;
+
+
+  float3 fNor  = v0.nor * vert.triWeights.x;
+         fNor += v1.nor * vert.triWeights.y;
+         fNor += v2.nor * vert.triWeights.z;
+
+
+  float2 fUV  = v0.uv * vert.triWeights.x;
+         fUV += v1.uv * vert.triWeights.y;
+         fUV += v2.uv * vert.triWeights.z;
+
+
+  vert.nor =  normalize(fNor);
+  vert.tang =  normalize(fTang);
+  vert.uv = fUV;
+
+  vert.debug = fPos.x;
+
+  float3 force = vert.pos - (fPos - normalize(fNor) * .4);
+
+  vert.vel += -force * .4;
+  vert.pos += vert.vel;
+
+  vert.vel *= .8;
+
+  _VertBuffer[pID] = vert;
+}
+}

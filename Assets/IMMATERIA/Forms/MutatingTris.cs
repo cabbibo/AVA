@@ -1,0 +1,21 @@
+﻿using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+
+public class MutatingTris : IndexForm {
+
+
+  private int[] values;
+  public override void SetCount(){
+    Mesh mesh = ((MutatingVerts)toIndex).mesh;
+    values = mesh.triangles;
+    count = values.Length;
+  }
+
+  public override void Embody(){
+    SetData(values);
+  }
+
+}
+

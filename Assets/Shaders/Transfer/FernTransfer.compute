@@ -1,0 +1,98 @@
+﻿
+#pragma kernel Transfer
+
+struct Vert{
+    float3 pos;
+    float3 vel;
+    float3 nor;
+    float3 tangent;
+    float2 uv;
+    float2 debug;
+};
+
+RWStructuredBuffer<Vert> _VertBuffer;
+RWStructuredBuffer<Vert> _FernBuffer;
+RWStructuredBuffer<Vert> _SkeletonBuffer;
+
+int _VertBuffer_COUNT;
+int _FernBuffer_COUNT;
+int _SkeletonBuffer_COUNT;
+#include "../Chunks/safeID.cginc"
+
+int _VertsPerVert;
+int _VertsPerHair;
+
+
+#define NR_THREADS 128
+[numthreads(NR_THREADS,1,1)]
+void Transfer (uint threadID : SV_GroupIndex, uint3 u3GroupID : SV_GroupID) {
+
+    int pID = threadID + u3GroupID.x * NR_THREADS;
+
+    int transferID = pID / 3;
+    int which = pID % 3;
+
+
+    Vert p1 = _FernBuffer[safeID( transferID , _FernBuffer_COUNT )];
+
+    int sub1 = 1;
+    int sub2 = 2;
+
+
+    // TODO Needs correct cutoff
+    if( p1.uv.x  == (2/float(_VertsPerHair)) ){
+      sub1 = 1;
+      sub2 = 1;
+    }
+
+    if( p1.uv.x  == (1/float(_VertsPerHair)) ){
+      sub1 = 0;
+      sub2 = 1;
+    }
+
+    if( p1.uv.x  < (1/float(_VertsPerHair)) ){
+      sub1 = 0;
+      sub2 = 0;
+    }
+
+
+
+    int sID1 = (transferID / _VertsPerVert)-sub1;
+    int sID2 = sID1 - sub2;
+
+    Vert s1 = _SkeletonBuffer[safeID(sID1,_SkeletonBuffer_COUNT)];
+    Vert s2 = _SkeletonBuffer[safeID(sID2,_SkeletonBuffer_COUNT)];
+
+
+    float3 fPos; float2 fUV; float3 fNor; float2 fDebug;
+
+    float3 fTan = normalize(p1.pos - s1.pos);
+
+    fNor = normalize( cross( 100*(p1.pos - s1.pos), 100*(p1.pos - s2.pos)));
+
+    if( which == 0 ){
+      fPos = p1.pos;
+      fUV = float2( 1, .5); 
+      fDebug = (s1.uv + s2.uv)  / 2;
+    }else if( which  == 1 ){
+      fPos = s1.pos;
+      fDebug = s1.uv;
+      fUV = float2( 0 , 0 );
+    }else{
+      fPos = s2.pos;
+      fDebug = s2.uv;
+      fUV = float2( 0 , 1 );
+    }
+
+    
+   // fPos = float3(0,0,0);
+
+    pID = safeID(pID,_VertBuffer_COUNT);
+
+    _VertBuffer[pID].pos = fPos;
+    _VertBuffer[pID].uv = fUV;
+    _VertBuffer[pID].nor = fNor;
+    _VertBuffer[pID].tangent = fTan;
+    _VertBuffer[pID].debug = fDebug;
+
+}

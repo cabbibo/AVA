@@ -1,0 +1,305 @@
+﻿#pragma kernel Intersect
+
+float _DT;
+float _Time;
+
+
+int _Count;
+int _TapOrDrags;
+int _Deform;
+
+
+
+
+int _TouchID;
+
+
+float _MinDistance;
+
+int _ActiveObject;
+
+float3 _RO;
+float3 _RD;
+
+float4x4 transform;
+
+float _JustDown;
+int _NumObjects;
+
+
+
+
+
+struct Particle{
+  float3 pos;
+  float3 vel;
+  float3 nor;
+  float3 tang;
+  float2 uv;
+  float used;
+  float3 triIDs;
+  float3 triWeights;
+  float3 debug;
+};
+
+/*
+  struct Vert{
+
+    float3 pos;
+    float3 nor;
+    float3 tang;
+    float2 uv;
+    float debug;
+  };
+*/
+
+
+/*struct Vert{
+  float3 pos;
+  float3 oPos;
+  float3 nor;
+  float3 tang;
+  float2 uv;
+  float2 debug;
+};*/
+
+
+
+struct Vert{
+
+    float3 pos;
+    float3 vel;
+    float3 nor;
+    float3 tang;
+    float2 uv;
+  
+    float used;
+  
+   
+    float3 targetPos;
+    float3 bindPos;
+    float3 bindNor;
+    float3 bindTan;
+
+    float4 boneWeights;
+    float4 boneIDs;
+
+    float debug;
+
+  };
+
+
+float4x4 _Transform;
+
+// 1 value
+RWStructuredBuffer<float4> _OutBuffer;
+
+
+RWStructuredBuffer<Vert> _SkinnedVertBuffer;
+RWStructuredBuffer<int> _SkinnedTriBuffer;
+
+
+RWStructuredBuffer<Particle> _ParticleBuffer;
+
+int _SkinnedVertBuffer_COUNT;
+int _SkinnedTriBuffer_COUNT;
+int _ParticleBuffer_COUNT;
+
+#include "../Chunks/safeID.cginc"
+
+
+float intersectTriangle( float3 orig, float3 dir, float3 v1, float3 v2, float3 v3)
+{
+    const float INFINITY = 1e10;
+
+    float3 u, v, n; // triangle vectors
+    float3 w0, w;  // ray vectors
+    float r, a, b; // params to calc ray-plane intersect
+
+    // get triangle edge vectors and plane normal
+    u = v2 - v1;
+    v = v3 - v1;
+    n = cross(u, v);
+
+    w0 = orig - v1;
+    a = -dot(n, w0);
+    b = dot(n, dir);
+    if (abs(b) < 1e-5)
+    {
+        // ray is parallel to triangle plane, and thus can never intersect.
+        return INFINITY;
+    }
+
+    // get intersect point of ray with triangle plane
+    r = a / b;
+    r = abs(r);
+    if (r < 0.0)
+        return INFINITY; // ray goes away from triangle.
+
+    float3 I = orig + r * dir;
+    float uu, uv, vv, wu, wv, D;
+    uu = dot(u, u);
+    uv = dot(u, v);
+    vv = dot(v, v);
+    w = I - v1;
+    wu = dot(w, u);
+    wv = dot(w, v);
+    D = uv * uv - uu * vv;
+
+    // get and test parametric coords
+    float s, t;
+    s = (uv * wv - vv * wu) / D;
+    if (s < 0.0 || s > 1.0)
+        return INFINITY;
+    t = (uv * wu - uu * wv) / D;
+    if (t < 0.0 || (s + t) > 1.0)
+        return INFINITY;
+
+     return (r > 1e-5) ? r : INFINITY;
+}
+
+float4 RayTriIntersect(float3 v1, float3 v2, float3 v3 , out float3 intersectPosition ){
+
+  float3 fRO = mul(_Transform , _RO * 1000);
+  float3 fRD = mul(_Transform ,-_RD * 1000);
+  float3 fV1 = v1 * 1000;
+  float3 fV2 = v2 * 1000;
+  float3 fV3 = v3 * 1000;
+
+  float r = intersectTriangle( fRO, fRD , fV1,fV2,fV3);
+
+    float3 nor = cross( fV1 - fV2 , fV3 - fV2 );
+    float area = length(nor);
+
+    if( r < 10000000 ){
+
+      if( dot( normalize(fRD) , normalize(nor) ) > 0 ){
+      float3 p = fRO + r * fRD; 
+
+      intersectPosition = p / 1000;
+
+
+
+      float weight1;
+      float weight2;
+      float weight3;
+
+      float3 c;
+
+      float3 edge0 = fV2 - fV1; 
+      float3 vp1 = p - fV1; 
+      c = cross( edge0 ,vp1); 
+      weight1 = length( c ) / area;
+
+      float3 edge1 = fV3 - fV2; 
+      float3 vp2 = p - fV2; 
+      c = cross( edge1 ,vp2); 
+      weight2 = length( c ) / area;
+
+      float3 edge2 = fV1 - fV3; 
+      float3 vp3 = p - fV3; 
+      c = cross( edge2 ,vp3); 
+      weight3 = length( c ) / area;
+
+        return float4(float3(weight2,weight3,weight1),1);
+      }else{
+        intersectPosition = float3(10000,10000,10000);
+        return float4(1,1,1,-1);
+      }
+
+    }else{
+
+      intersectPosition = float3(10000,10000,10000);
+      return float4(1,1,1,-1);
+    }
+}
+
+
+
+Particle GetParticleFromID(int objectID , int pID ){
+  return _ParticleBuffer[safeID(pID,_ParticleBuffer_COUNT)];
+}
+
+void SetParticleFromID( Particle p , int objectID , int pID ){
+  _ParticleBuffer[safeID(pID,_ParticleBuffer_COUNT)] = p;
+}
+
+
+void SetParticle( int objectID, int id1 , int id2 ,int id3 , float4 r , float3 intersectPosition ){
+
+  float4 pInfo = _OutBuffer[objectID];
+
+  float3 dif = pInfo.xyz - intersectPosition;
+
+  if( length(dif) > _MinDistance ){
+
+
+    Particle p = GetParticleFromID( objectID  , int(pInfo.a) );
+
+    p.used = 1;
+     
+    p.triIDs.x = id1;
+    p.triIDs.y = id2;
+    p.triIDs.z = id3;
+
+    p.triWeights.x = r.x;
+    p.triWeights.y = r.y;
+    p.triWeights.z = r.z;
+
+    p.debug.x = _TouchID;
+
+    SetParticleFromID( p , objectID  , int(pInfo.a) );
+
+    pInfo.a += 1;
+    pInfo.xyz = intersectPosition;
+
+    if( (int)pInfo.a >= _ParticleBuffer_COUNT){
+      pInfo.a = 0;
+    }
+
+    _OutBuffer[objectID] = float4(intersectPosition,pInfo.a);
+
+  }
+
+}
+
+
+
+#define NR_THREADS 128
+
+[numthreads(NR_THREADS,1,1)]
+void Intersect ( uint threadID : SV_GroupIndex, uint3 u3GroupID : SV_GroupID, uint3 id : SV_DispatchThreadID) {
+
+ //_OutBuffer[_NumObjects+1] = float4(0,0,0,0);
+  int pID = threadID + u3GroupID * NR_THREADS;
+
+
+      int t1 = safeID( pID * 3 + 0  , _SkinnedTriBuffer_COUNT);
+      int t2 = safeID( pID * 3 + 1  , _SkinnedTriBuffer_COUNT);
+      int t3 = safeID( pID * 3 + 2  , _SkinnedTriBuffer_COUNT);
+
+
+      int id1 = safeID( _SkinnedTriBuffer[t1] , _SkinnedVertBuffer_COUNT );
+      int id2 = safeID( _SkinnedTriBuffer[t2] , _SkinnedVertBuffer_COUNT );
+      int id3 = safeID( _SkinnedTriBuffer[t3] , _SkinnedVertBuffer_COUNT );
+
+      float3 p1 = mul( _Transform , float4(_SkinnedVertBuffer[id1].pos,1)).xyz;
+      float3 p2 = mul( _Transform , float4(_SkinnedVertBuffer[id2].pos,1)).xyz;
+      float3 p3 = mul( _Transform , float4(_SkinnedVertBuffer[id3].pos,1)).xyz;
+
+      float3 intersectP;
+
+      float4 r = RayTriIntersect( p1 , p2 , p3 , intersectP );
+
+
+      if( length( intersectP ) < 10000 ){
+
+        //_OutBuffer[0] = float4(1,0,0,10);
+
+        SetParticle(0,id1,id2,id3,r,intersectP);
+       
+      }
+
+
+  
+}

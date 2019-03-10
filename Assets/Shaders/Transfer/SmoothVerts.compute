@@ -1,0 +1,178 @@
+﻿#pragma kernel Transfer
+#pragma kernel GooeyTransfer
+
+  struct Base{
+
+    float3 pos;
+    float3 vel;
+    float3 nor;
+    float3 tang;
+    float2 uv;
+    float used;
+    float3 triIDs;
+    float3 triWeights;
+    float3 debug;
+
+  };
+
+
+struct Vert{
+    float3 pos;
+    float3 vel;
+    float3 nor;
+    float3 tangent;
+    float2 uv;
+    float2 debug;
+};
+
+
+RWStructuredBuffer<Vert> _VertBuffer;
+RWStructuredBuffer<Base> _SkeletonBuffer;
+
+int _VertBuffer_COUNT;
+int _SkeletonBuffer_COUNT;
+int _NumHairs;
+float _Delta;
+
+#include "../Chunks/cubicCurve.cginc"
+#include "../Chunks/safeID.cginc"
+
+float3 cubicFromValue( in float val , in int particleID, out float3 upPos , out float3 doPos ){
+
+  float3 p0 = float3( 0. , 0. , 0. );
+  float3 v0 = float3( 0. , 0. , 0. );
+  float3 p1 = float3( 0. , 0. , 0. );
+  float3 v1 = float3( 0. , 0. , 0. );
+
+  float3 p2 = float3( 0. , 0. , 0. );
+
+  float vPP = float(_SkeletonBuffer_COUNT);
+
+  float base = val * (vPP-1);
+
+  int baseUp   = floor( base );
+  int baseDown = ceil( base );
+  float amount = base - float(baseUp);
+
+
+  int bladeBase = (_SkeletonBuffer_COUNT) * particleID;
+
+  if( baseUp == 0 ){
+
+    p0 = _SkeletonBuffer[ safeID( baseUp       + bladeBase , _SkeletonBuffer_COUNT) ].pos;
+    p1 = _SkeletonBuffer[ safeID( baseDown     + bladeBase , _SkeletonBuffer_COUNT) ].pos;
+    p2 = _SkeletonBuffer[ safeID( baseDown + 1 + bladeBase , _SkeletonBuffer_COUNT) ].pos;
+
+    v1 = .5 * ( p2 - p0 );
+
+  }else if( baseDown == vPP-1 ){
+
+    p0 = _SkeletonBuffer[ safeID( baseUp     + bladeBase , _SkeletonBuffer_COUNT) ].pos;
+    p1 = _SkeletonBuffer[ safeID( baseDown   + bladeBase , _SkeletonBuffer_COUNT) ].pos;
+    p2 = _SkeletonBuffer[ safeID( baseUp - 1 + bladeBase , _SkeletonBuffer_COUNT) ].pos;
+
+    v0 = .5 * ( p1 - p2 );
+
+  }else{
+
+    p0 = _SkeletonBuffer[ safeID( baseUp   + bladeBase , _SkeletonBuffer_COUNT) ].pos;
+    p1 = _SkeletonBuffer[ safeID( baseDown + bladeBase , _SkeletonBuffer_COUNT) ].pos;
+
+
+    float3 pMinus = float3(0,0,0);
+
+    pMinus = _SkeletonBuffer[ safeID( baseUp   - 1 + bladeBase, _SkeletonBuffer_COUNT) ].pos;
+    p2 =     _SkeletonBuffer[ safeID( baseDown + 1 + bladeBase, _SkeletonBuffer_COUNT) ].pos;
+
+    v1 = .5 * ( p2 - p0 );
+    v0 = .5 * ( p1 - pMinus );
+
+  }
+
+  float3 c0 = p0;
+  float3 c1 = p0 + v0/3.;
+  float3 c2 = p1 - v1/3.;
+  float3 c3 = p1;
+
+  float3 pos = cubicCurve( amount , c0 , c1 , c2 , c3 );
+
+  upPos = cubicCurve( amount  + .01 , c0 , c1 , c2 , c3 );
+  doPos = cubicCurve( amount  - .01 , c0 , c1 , c2 , c3 );
+
+  return pos;
+
+}
+
+#define NR_THREADS 128
+[numthreads(NR_THREADS,1,1)]
+void Transfer (uint threadID : SV_GroupIndex, uint3 u3GroupID : SV_GroupID) {
+
+    int pID = threadID + u3GroupID.x * NR_THREADS;
+    int hairID = pID / _VertBuffer_COUNT;
+    int idInHair = pID % _VertBuffer_COUNT;
+
+    float rowVal = float(idInHair) / float(_VertBuffer_COUNT);
+
+    float3 upPos; float3 doPos;
+
+    float3 pos = cubicFromValue( rowVal , hairID , upPos , doPos );
+
+    int sID = safeID( pID , _VertBuffer_COUNT );
+    Vert v = _VertBuffer[sID];
+
+    v.debug = float2(float(hairID),length(v.pos-pos));
+    v.uv = float2( rowVal , v.debug.x / float(_NumHairs));
+    v.pos =  pos;
+    v.nor = normalize(upPos - doPos);
+    _VertBuffer[sID] = v;
+
+}
+
+#define NR_THREADS 128
+[numthreads(NR_THREADS,1,1)]
+void GooeyTransfer (uint threadID : SV_GroupIndex, uint3 u3GroupID : SV_GroupID) {
+
+    int pID = threadID + u3GroupID.x * NR_THREADS;
+    int hairID = pID / _VertBuffer_COUNT;
+    int idInHair = pID % _VertBuffer_COUNT;
+
+    float rowVal = float(idInHair) / float(_VertBuffer_COUNT);
+
+    float3 upPos; float3 doPos;
+
+    float3 pos = cubicFromValue( rowVal , hairID , upPos , doPos );
+
+    int sID = safeID( pID , _VertBuffer_COUNT );
+    Vert v = _VertBuffer[sID];
+
+ 
+    _Delta = .06;
+    float3 force = -400 * (v.pos - pos);
+
+    if( length( force ) > 10 ){
+      force = normalize(force) * 10;
+    }
+ 
+
+
+    bool tb = false;
+
+  
+    if( _Delta  < .1 && tb == false ){
+
+      float dampening = .9;// - vert.life * .01;
+
+      v.vel += force * _Delta * _Delta * (3 + sin(rowVal*100000))/3;
+ 
+      v.pos += v.vel * _Delta;
+
+      v.vel *= .9;
+
+    }
+
+    v.debug = float2(float(hairID),length(v.pos-pos));
+    v.uv = float2( rowVal , v.debug.x / float(_NumHairs));
+    v.nor = normalize(upPos - doPos);
+    _VertBuffer[sID] = v;
+
+}

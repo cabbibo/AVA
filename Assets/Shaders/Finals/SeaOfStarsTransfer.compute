@@ -1,0 +1,67 @@
+﻿
+#pragma kernel Transfer
+
+struct Vert{
+    float3 pos;
+    float3 vel;
+    float3 nor;
+    float3 tangent;
+    float2 uv;
+    float2  debug;
+};
+
+RWStructuredBuffer<Vert> _VertBuffer;
+RWStructuredBuffer<Vert> _SkeletonBuffer;
+
+int _VertBuffer_COUNT;
+int _SkeletonBuffer_COUNT;
+#include "../Chunks/safeID.cginc"
+#include "../Chunks/hash.cginc"
+
+
+float3 _CameraUp;
+float3 _CameraLeft;
+float _Radius;
+
+
+#define NR_THREADS 128
+[numthreads(NR_THREADS,1,1)]
+void Transfer (uint threadID : SV_GroupIndex, uint3 u3GroupID : SV_GroupID) {
+
+    int pID = threadID + u3GroupID.x * NR_THREADS;
+
+    float fID = float(pID)%7;
+    int particleID = pID / 7;
+
+
+
+    Vert p = _SkeletonBuffer[safeID(particleID,_SkeletonBuffer_COUNT)];
+
+    int idInParticle = pID % 4;
+
+    float3 l = normalize(cross(p.nor,float3(0,1,0)));
+    float3 u = normalize(cross(p.nor,l));
+
+    float a = ((fID-1)/6) * 6.283;
+    float x = sin(a);
+    float y = -cos(a);
+    if( fID == 0 ){ x = 0; y = 0;}
+
+    float2 uv = float2(x,y);
+    uv += float2(1,1);
+    uv /= 2;
+    float2 sUV = uv * (1./6.)+ floor(float2(hash(float(particleID)*10), hash(float(particleID)*20)) * 6)/6;
+            
+
+    float3 fPos = p.pos + (l*x + u*y) * saturate(fID)* _Radius *(hash(float(particleID*143.))); saturate(p.debug.y);
+
+    float2 fUV = float2( (fID/6) , saturate(fID));
+
+    _VertBuffer[safeID(pID,_VertBuffer_COUNT)].tangent = fPos-p.pos;
+    _VertBuffer[safeID(pID,_VertBuffer_COUNT)].pos = fPos;
+    _VertBuffer[safeID(pID,_VertBuffer_COUNT)].uv = fUV;
+    _VertBuffer[safeID(pID,_VertBuffer_COUNT)].nor = p.nor;
+    _VertBuffer[safeID(pID,_VertBuffer_COUNT)].vel = p.vel;
+    _VertBuffer[safeID(pID,_VertBuffer_COUNT)].debug = sUV;//float2(float(particleID),0);
+
+}

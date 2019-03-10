@@ -1,0 +1,98 @@
+﻿
+#pragma kernel Transfer
+
+struct Vert{
+    float3 pos;
+    float3 vel;
+    float3 nor;
+    float3 tangent;
+    float2 uv;
+    float2 debug;
+};
+
+RWStructuredBuffer<Vert> _VertBuffer;
+RWStructuredBuffer<Vert> _SkeletonBuffer;
+
+int _VertBuffer_COUNT;
+int _SkeletonBuffer_COUNT;
+#include "../Chunks/safeID.cginc"
+#include "../Chunks/noise.cginc"
+
+int _VertsPerGem = 6;
+int _NumVertsPerHair;
+float3 _CameraUp;
+float3 _CameraRight;
+float3 _CameraForward;
+float _Radius;
+
+
+
+#define NR_THREADS 128
+[numthreads(NR_THREADS,1,1)]
+void Transfer (uint threadID : SV_GroupIndex, uint3 u3GroupID : SV_GroupID) {
+
+
+    int pID = threadID + u3GroupID.x * NR_THREADS;
+
+    int transferID = pID;
+    int which = pID % (_VertsPerGem+2);
+
+    int gemID = (transferID / (_VertsPerGem+2));
+
+    int sID = (gemID) ;
+    
+    Vert v = _SkeletonBuffer[safeID(sID,_SkeletonBuffer_COUNT)];
+
+
+
+    float3 fPos; float2 fUV; float3 fNor; float2 fDebug;
+
+    float hVal = hash( float(gemID))  + .5;
+
+    float3 y = normalize(normalize(v.nor) + 6 * normalize(v.tangent) * (hash(float(gemID * 10))-.5) + 6*normalize( cross( v.nor,v.tangent)) * (hash(float(gemID * 100))-.5));
+    float3 x = normalize( cross(y,normalize(v.tangent)));
+    float3 z = normalize( cross(y,x));
+
+    if( which == _VertsPerGem ){
+      fPos = y * _Radius * 1.2 * hVal + v.pos;
+      fNor = y;
+      fUV = float2(0,0);
+    }else if( which == _VertsPerGem + 1 ){
+
+
+      fPos = -y * _Radius * 1.2 * hVal + v.pos;
+      fNor = -y;
+      fUV = float2(0,0);
+
+    }else{
+
+      int fID = gemID * _VertsPerGem + which;
+        
+      float fW = float(which)/float(_VertsPerGem);
+
+      float angle = fW * 6.28;
+
+     
+      fPos = v.pos + (sin( angle ) * x -cos(angle) * z) * _Radius * 1.2 * hVal;// + (d.pos - s1.pos ) * _Radius + s1.pos;
+      fNor = normalize(fPos - v.pos );
+
+      fUV = float2(fW,1);
+
+
+    }
+
+
+
+
+    fDebug = float2( float(transferID) , 0 );
+
+    pID = safeID(pID,_VertBuffer_COUNT);
+
+    _VertBuffer[pID].pos    = fPos;
+    _VertBuffer[pID].uv     = fUV;
+    _VertBuffer[pID].nor    = fNor;
+    _VertBuffer[pID].debug  = fDebug;
+
+}
+
+
