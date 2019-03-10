@@ -409,6 +409,241 @@ MonoBehaviour:
   Base: {fileID: 1993778133}
   Hair: {fileID: 36190477}
   transformArray: []
+--- !u!1 &87082197
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 87082203}
+  - component: {fileID: 87082198}
+  - component: {fileID: 87082199}
+  - component: {fileID: 87082202}
+  - component: {fileID: 87082201}
+  - component: {fileID: 87082200}
+  m_Layer: 0
+  m_Name: Tubz
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &87082198
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 87082197}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b1567fda28ff84fd694b1859edd64637, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  created: 0
+  begunGestation: 0
+  gestating: 0
+  gestated: 0
+  begunBirth: 0
+  birthing: 0
+  birthed: 0
+  begunLive: 0
+  living: 0
+  lived: 0
+  begunDeath: 0
+  dying: 0
+  died: 0
+  destroyed: 1
+  debug: 0
+  active: 1
+  Cycles: []
+  auto: 0
+  Lifes: []
+  Forms: []
+  verts: {fileID: 87082202}
+  triangles: {fileID: 87082201}
+  transfer: {fileID: 87082200}
+  body: {fileID: 87082199}
+  showBody: 1
+  skeleton: {fileID: 492745979}
+  radius: 0.01
+  transformArray: []
+  cam: {fileID: 0}
+  right: {x: 0, y: 0, z: 0}
+  up: {x: 0, y: 0, z: 0}
+  forward: {x: 0, y: 0, z: 0}
+--- !u!114 &87082199
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 87082197}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a4c7fa692e4cc426aa37fba780fcae78, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  created: 0
+  begunGestation: 0
+  gestating: 0
+  gestated: 0
+  begunBirth: 0
+  birthing: 0
+  birthed: 0
+  begunLive: 0
+  living: 0
+  lived: 0
+  begunDeath: 0
+  dying: 0
+  died: 0
+  destroyed: 1
+  debug: 0
+  active: 0
+  Cycles: []
+  auto: 0
+  Lifes: []
+  Forms: []
+  verts: {fileID: 87082202}
+  triangles: {fileID: 87082201}
+  render: {fileID: 0}
+  mesh: {fileID: 0}
+  filter: {fileID: 0}
+  self: 0
+  material: {fileID: 2100000, guid: da9c2bc52997d477795f1af864bb48e4, type: 2}
+  debugMaterial: {fileID: 0}
+--- !u!114 &87082200
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 87082197}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 521ed2d62d2034941a1197389f9c70d5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  created: 0
+  begunGestation: 0
+  gestating: 0
+  gestated: 0
+  begunBirth: 0
+  birthing: 0
+  birthed: 0
+  begunLive: 0
+  living: 0
+  lived: 0
+  begunDeath: 0
+  dying: 0
+  died: 0
+  destroyed: 1
+  debug: 0
+  active: 1
+  Cycles: []
+  primaryName: 
+  primaryForm: {fileID: 0}
+  shader: {fileID: 7200000, guid: 33c1957f7dc70ed44afcaa54e4d84167, type: 3}
+  kernelName: StraightTransfer
+  kernel: 0
+  executionTime: 0
+--- !u!114 &87082201
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 87082197}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ae4d414b03ee09e48af6b289ac5f8947, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  created: 0
+  begunGestation: 0
+  gestating: 0
+  gestated: 0
+  begunBirth: 0
+  birthing: 0
+  birthed: 0
+  begunLive: 0
+  living: 0
+  lived: 0
+  begunDeath: 0
+  dying: 0
+  died: 0
+  destroyed: 1
+  debug: 0
+  active: 0
+  Cycles: []
+  count: 0
+  intBuffer: 0
+  structSize: 0
+  description: 
+  timeToCreate: 0
+  totalMemory: 0
+  debugMaterial: {fileID: 2100000, guid: a26208c937c775a469f0791f9e50c4fd, type: 2}
+  toIndex: {fileID: 492745979}
+  width: 0
+  length: 0
+  numTubes: 0
+  verts: {fileID: 87082202}
+--- !u!114 &87082202
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 87082197}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dc52dc505840d30499d35efc242c05f3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  created: 0
+  begunGestation: 0
+  gestating: 0
+  gestated: 0
+  begunBirth: 0
+  birthing: 0
+  birthed: 0
+  begunLive: 0
+  living: 0
+  lived: 0
+  begunDeath: 0
+  dying: 0
+  died: 0
+  destroyed: 1
+  debug: 0
+  active: 0
+  Cycles: []
+  count: 0
+  intBuffer: 0
+  structSize: 0
+  description: 
+  timeToCreate: 0
+  totalMemory: 0
+  debugMaterial: {fileID: 2100000, guid: 9d5146d484f807743928932f86d26484, type: 2}
+  hair: {fileID: 492745979}
+  width: 6
+  length: 20
+  numTubes: 0
+--- !u!4 &87082203
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 87082197}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 492745977}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &170076733
 GameObject:
   m_ObjectHideFlags: 0
@@ -890,6 +1125,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 472234744}
+  - component: {fileID: 472000153}
   m_Layer: 0
   m_Name: mixamorig:RightUpLeg
   m_TagString: Untagged
@@ -897,6 +1133,19 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!114 &472000153
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 472000152}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eb801adca9daa904daf8a921e2f5086e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sizeMultiplier: 2
 --- !u!1 &472000154
 GameObject:
   m_ObjectHideFlags: 0
@@ -906,6 +1155,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 472234746}
+  - component: {fileID: 472000155}
   m_Layer: 0
   m_Name: mixamorig:Spine
   m_TagString: Untagged
@@ -913,6 +1163,19 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!114 &472000155
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 472000154}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eb801adca9daa904daf8a921e2f5086e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sizeMultiplier: 4
 --- !u!1 &472000156
 GameObject:
   m_ObjectHideFlags: 0
@@ -922,6 +1185,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 472234748}
+  - component: {fileID: 472000157}
   m_Layer: 0
   m_Name: mixamorig:Spine1
   m_TagString: Untagged
@@ -929,6 +1193,19 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!114 &472000157
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 472000156}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eb801adca9daa904daf8a921e2f5086e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sizeMultiplier: 4
 --- !u!1 &472000158
 GameObject:
   m_ObjectHideFlags: 0
@@ -970,6 +1247,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 472234690}
+  - component: {fileID: 472000227}
   m_Layer: 0
   m_Name: mixamorig:Hips
   m_TagString: Untagged
@@ -977,6 +1255,19 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!114 &472000227
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 472000226}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eb801adca9daa904daf8a921e2f5086e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sizeMultiplier: 4
 --- !u!1 &472000228
 GameObject:
   m_ObjectHideFlags: 0
@@ -1042,6 +1333,7 @@ GameObject:
   - component: {fileID: 472000241}
   - component: {fileID: 472000239}
   - component: {fileID: 472000237}
+  - component: {fileID: 472000249}
   m_Layer: 0
   m_Name: human004@Agony
   m_TagString: Untagged
@@ -1116,6 +1408,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 472234702}
+  - component: {fileID: 472000255}
   m_Layer: 0
   m_Name: mixamorig:Head
   m_TagString: Untagged
@@ -1276,6 +1569,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 472234708}
+  - component: {fileID: 472000251}
   m_Layer: 0
   m_Name: mixamorig:LeftUpLeg
   m_TagString: Untagged
@@ -1332,6 +1626,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 472234710}
+  - component: {fileID: 472000253}
   m_Layer: 0
   m_Name: mixamorig:Neck
   m_TagString: Untagged
@@ -1369,6 +1664,7 @@ MonoBehaviour:
   active: 1
   Cycles:
   - {fileID: 472000237}
+  - {fileID: 472000249}
   auto: 0
   Lifes: []
   Forms: []
@@ -1400,6 +1696,45 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!114 &472000249
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 472000236}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1a50ad4507ad3c54184e229179320c12, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  created: 0
+  begunGestation: 0
+  gestating: 0
+  gestated: 0
+  begunBirth: 0
+  birthing: 0
+  birthed: 0
+  begunLive: 0
+  living: 0
+  lived: 0
+  begunDeath: 0
+  dying: 0
+  died: 0
+  destroyed: 1
+  debug: 1
+  active: 1
+  Cycles: []
+  count: 0
+  intBuffer: 0
+  structSize: 0
+  description: 
+  timeToCreate: 0
+  totalMemory: 0
+  debugMaterial: {fileID: 2100000, guid: bfc2fc5328ef9024cbd48e3896719e9a, type: 2}
+  baseBone: {fileID: 472234690}
+  baseSize: 0.04
+  boneID: 0
 --- !u!1 &472000250
 GameObject:
   m_ObjectHideFlags: 0
@@ -1416,6 +1751,19 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!114 &472000251
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 472000244}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eb801adca9daa904daf8a921e2f5086e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sizeMultiplier: 2
 --- !u!1 &472000252
 GameObject:
   m_ObjectHideFlags: 0
@@ -1432,6 +1780,19 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!114 &472000253
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 472000246}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eb801adca9daa904daf8a921e2f5086e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sizeMultiplier: 2
 --- !u!1 &472000254
 GameObject:
   m_ObjectHideFlags: 0
@@ -1448,6 +1809,19 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!114 &472000255
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 472000238}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eb801adca9daa904daf8a921e2f5086e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sizeMultiplier: 2
 --- !u!4 &472234688
 Transform:
   m_ObjectHideFlags: 0
@@ -1942,6 +2316,337 @@ SkinnedMeshRenderer:
     m_Center: {x: -0.047398895, y: -0.15319282, z: 0.100271806}
     m_Extent: {x: 0.46957365, y: 0.84637684, z: 0.56213284}
   m_DirtyAABB: 0
+--- !u!1 &492745970
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 492745977}
+  - component: {fileID: 492745980}
+  - component: {fileID: 492745979}
+  - component: {fileID: 492745976}
+  - component: {fileID: 492745975}
+  - component: {fileID: 492745974}
+  - component: {fileID: 492745973}
+  - component: {fileID: 492745971}
+  - component: {fileID: 492745972}
+  m_Layer: 0
+  m_Name: Rope
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &492745971
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 492745970}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a4c8c483ce29c09429ac799d08da68bd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  created: 0
+  begunGestation: 0
+  gestating: 0
+  gestated: 0
+  begunBirth: 0
+  birthing: 0
+  birthed: 0
+  begunLive: 0
+  living: 0
+  lived: 0
+  begunDeath: 0
+  dying: 0
+  died: 0
+  destroyed: 1
+  debug: 0
+  active: 0
+  Cycles: []
+  toBind: {fileID: 492745975}
+  bones: {fileID: 472000249}
+  gravity: 1
+--- !u!114 &492745972
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 492745970}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 728a4ff60a06942f88835f622be21a6f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  created: 0
+  begunGestation: 0
+  gestating: 0
+  gestated: 0
+  begunBirth: 0
+  birthing: 0
+  birthed: 0
+  begunLive: 0
+  living: 0
+  lived: 0
+  begunDeath: 0
+  dying: 0
+  died: 0
+  destroyed: 1
+  debug: 0
+  active: 0
+  Cycles: []
+  toBind: {fileID: 492745975}
+  noiseSize: 0
+  noiseSpeed: 0
+  noiseForce: 0
+  normalForce: 0
+  dampening: 0.9
+  upForce: 0
+--- !u!114 &492745973
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 492745970}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ed243af0e768bc34fbc125e59c6247b2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  created: 0
+  begunGestation: 0
+  gestating: 0
+  gestated: 0
+  begunBirth: 0
+  birthing: 0
+  birthed: 0
+  begunLive: 0
+  living: 0
+  lived: 0
+  begunDeath: 0
+  dying: 0
+  died: 0
+  destroyed: 1
+  debug: 0
+  active: 1
+  Cycles: []
+  primaryName: 
+  primaryForm: {fileID: 0}
+  shader: {fileID: 7200000, guid: 3212430a5fa410544a64036b5b54eac5, type: 3}
+  kernelName: RopeConstraint
+  kernel: 0
+  executionTime: 0
+--- !u!114 &492745974
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 492745970}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ed243af0e768bc34fbc125e59c6247b2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  created: 0
+  begunGestation: 0
+  gestating: 0
+  gestated: 0
+  begunBirth: 0
+  birthing: 0
+  birthed: 0
+  begunLive: 0
+  living: 0
+  lived: 0
+  begunDeath: 0
+  dying: 0
+  died: 0
+  destroyed: 1
+  debug: 0
+  active: 1
+  Cycles: []
+  primaryName: 
+  primaryForm: {fileID: 0}
+  shader: {fileID: 7200000, guid: 3212430a5fa410544a64036b5b54eac5, type: 3}
+  kernelName: RopeConstraint
+  kernel: 0
+  executionTime: 0
+--- !u!114 &492745975
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 492745970}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 521ed2d62d2034941a1197389f9c70d5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  created: 0
+  begunGestation: 0
+  gestating: 0
+  gestated: 0
+  begunBirth: 0
+  birthing: 0
+  birthed: 0
+  begunLive: 0
+  living: 0
+  lived: 0
+  begunDeath: 0
+  dying: 0
+  died: 0
+  destroyed: 1
+  debug: 0
+  active: 1
+  Cycles: []
+  primaryName: 
+  primaryForm: {fileID: 0}
+  shader: {fileID: 7200000, guid: 3212430a5fa410544a64036b5b54eac5, type: 3}
+  kernelName: RopeCollision
+  kernel: 0
+  executionTime: 0
+--- !u!114 &492745976
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 492745970}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 521ed2d62d2034941a1197389f9c70d5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  created: 0
+  begunGestation: 0
+  gestating: 0
+  gestated: 0
+  begunBirth: 0
+  birthing: 0
+  birthed: 0
+  begunLive: 0
+  living: 0
+  lived: 0
+  begunDeath: 0
+  dying: 0
+  died: 0
+  destroyed: 1
+  debug: 0
+  active: 1
+  Cycles: []
+  primaryName: 
+  primaryForm: {fileID: 0}
+  shader: {fileID: 7200000, guid: 3212430a5fa410544a64036b5b54eac5, type: 3}
+  kernelName: RopeSet
+  kernel: 0
+  executionTime: 0
+--- !u!4 &492745977
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 492745970}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children:
+  - {fileID: 87082203}
+  m_Father: {fileID: 601617158}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &492745979
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 492745970}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6eac9723c67d198499bd399d0cd3859b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  created: 0
+  begunGestation: 0
+  gestating: 0
+  gestated: 0
+  begunBirth: 0
+  birthing: 0
+  birthed: 0
+  begunLive: 0
+  living: 0
+  lived: 0
+  begunDeath: 0
+  dying: 0
+  died: 0
+  destroyed: 1
+  debug: 0
+  active: 1
+  Cycles: []
+  count: 0
+  intBuffer: 0
+  structSize: 0
+  description: 
+  timeToCreate: 0
+  totalMemory: 0
+  debugMaterial: {fileID: 2100000, guid: 5ec31fc377d637845bc7b451b442e217, type: 2}
+  baseForm: {fileID: 601617157}
+  numVertsPerHair: 8
+  length: 1
+  variance: 111
+  lineDebugMaterial: {fileID: 2100000, guid: f1f63776814044a26b4b2b64672ffd72, type: 2}
+  numHairs: 0
+--- !u!114 &492745980
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 492745970}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 71ef8cbe75db7664897565a9cd28977e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  created: 0
+  begunGestation: 0
+  gestating: 0
+  gestated: 0
+  begunBirth: 0
+  birthing: 0
+  birthed: 0
+  begunLive: 0
+  living: 0
+  lived: 0
+  begunDeath: 0
+  dying: 0
+  died: 0
+  destroyed: 1
+  debug: 0
+  active: 0
+  Cycles:
+  - {fileID: 492745971}
+  - {fileID: 87082198}
+  - {fileID: 492745972}
+  auto: 0
+  Lifes: []
+  Forms: []
+  SetHairPosition: {fileID: 492745976}
+  HairCollision: {fileID: 492745975}
+  HairConstraint0: {fileID: 492745974}
+  HairConstraint1: {fileID: 492745973}
+  Base: {fileID: 601617157}
+  Hair: {fileID: 492745979}
+  transformArray: []
 --- !u!1 &534669902
 GameObject:
   m_ObjectHideFlags: 0
@@ -2108,6 +2813,482 @@ MonoBehaviour:
   oP: {x: 0, y: 0}
   vel: {x: 0, y: 0}
   touchID: 0
+--- !u!1 &601617153
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 601617158}
+  - component: {fileID: 601617154}
+  - component: {fileID: 601617157}
+  - component: {fileID: 601617156}
+  - component: {fileID: 601617159}
+  - component: {fileID: 601617155}
+  m_Layer: 0
+  m_Name: Pretend (1)
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &601617154
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 601617153}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 91d5ffc020a2bfe409ae9c4c304aea51, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  created: 0
+  begunGestation: 0
+  gestating: 0
+  gestated: 0
+  begunBirth: 0
+  birthing: 0
+  birthed: 0
+  begunLive: 0
+  living: 0
+  lived: 0
+  begunDeath: 0
+  dying: 0
+  died: 0
+  destroyed: 1
+  debug: 0
+  active: 1
+  Cycles:
+  - {fileID: 492745980}
+  - {fileID: 812304789}
+  auto: 0
+  Lifes: []
+  Forms: []
+  drawable: 1
+  dragDraw: 0
+  particles: {fileID: 601617157}
+  place: {fileID: 601617156}
+  intersect: {fileID: 601617155}
+  fileName: 
+  cameraUp: {x: 0, y: 0, z: 0}
+  cameraLeft: {x: 0, y: 0, z: 0}
+  radius: 0
+  transformFloats: []
+  test: 0
+  touch: {fileID: 534669906}
+  skin: {fileID: 472000245}
+  mesh: {fileID: 4300002, guid: 8bc31055912144ac0a1611a8c465d1a2, type: 3}
+--- !u!114 &601617155
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 601617153}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b7bf4af08ba682a46be49d9a1b2ad64d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  created: 0
+  begunGestation: 0
+  gestating: 0
+  gestated: 0
+  begunBirth: 0
+  birthing: 0
+  birthed: 0
+  begunLive: 0
+  living: 0
+  lived: 0
+  begunDeath: 0
+  dying: 0
+  died: 0
+  destroyed: 1
+  debug: 0
+  active: 0
+  Cycles: []
+  primaryName: 
+  primaryForm: {fileID: 0}
+  shader: {fileID: 7200000, guid: df1d662ae7dc0c94597406802c0655db, type: 3}
+  kernelName: Intersect
+  kernel: 0
+  executionTime: 0
+  value: {x: 0, y: 0, z: 0, w: 0}
+  count: 1
+  readBack: 0
+--- !u!114 &601617156
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 601617153}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 521ed2d62d2034941a1197389f9c70d5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  created: 0
+  begunGestation: 0
+  gestating: 0
+  gestated: 0
+  begunBirth: 0
+  birthing: 0
+  birthed: 0
+  begunLive: 0
+  living: 0
+  lived: 0
+  begunDeath: 0
+  dying: 0
+  died: 0
+  destroyed: 1
+  debug: 0
+  active: 1
+  Cycles: []
+  primaryName: 
+  primaryForm: {fileID: 0}
+  shader: {fileID: 7200000, guid: f62c06ed96aabaf41ba89f5ecbb40537, type: 3}
+  kernelName: PlacePoint
+  kernel: 0
+  executionTime: 0
+--- !u!114 &601617157
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 601617153}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d2ff162d32c73994d8fe1b9478cc8d11, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  created: 0
+  begunGestation: 0
+  gestating: 0
+  gestated: 0
+  begunBirth: 0
+  birthing: 0
+  birthed: 0
+  begunLive: 0
+  living: 0
+  lived: 0
+  begunDeath: 0
+  dying: 0
+  died: 0
+  destroyed: 1
+  debug: 0
+  active: 1
+  Cycles: []
+  count: 30
+  intBuffer: 0
+  structSize: 0
+  description: 
+  timeToCreate: 0
+  totalMemory: 0
+  debugMaterial: {fileID: 2100000, guid: 736858b3c1ea8734084801ae875826ab, type: 2}
+  AutoEmbody: 0
+  noiseSize: 1000
+  noiseType: even
+  mesh: {fileID: 0}
+--- !u!4 &601617158
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 601617153}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children:
+  - {fileID: 492745977}
+  - {fileID: 812304783}
+  m_Father: {fileID: 920381532}
+  m_RootOrder: 3
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &601617159
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 601617153}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 747f58bd787cf3943b077ed62198f4ad, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  point: {fileID: 0}
+  life: {fileID: 601617155}
+--- !u!1 &812304782
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 812304783}
+  - component: {fileID: 812304789}
+  - component: {fileID: 812304788}
+  - component: {fileID: 812304787}
+  - component: {fileID: 812304786}
+  - component: {fileID: 812304785}
+  - component: {fileID: 812304784}
+  m_Layer: 0
+  m_Name: Gems (1)
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &812304783
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 812304782}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 601617158}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &812304784
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 812304782}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 98852423b6949014284e88636962c0d5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  created: 0
+  begunGestation: 0
+  gestating: 0
+  gestated: 0
+  begunBirth: 0
+  birthing: 0
+  birthed: 0
+  begunLive: 0
+  living: 0
+  lived: 0
+  begunDeath: 0
+  dying: 0
+  died: 0
+  destroyed: 1
+  debug: 0
+  active: 1
+  Cycles: []
+  toBind: {fileID: 812304785}
+  verts: {fileID: 812304787}
+--- !u!114 &812304785
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 812304782}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 521ed2d62d2034941a1197389f9c70d5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  created: 0
+  begunGestation: 0
+  gestating: 0
+  gestated: 0
+  begunBirth: 0
+  birthing: 0
+  birthed: 0
+  begunLive: 0
+  living: 0
+  lived: 0
+  begunDeath: 0
+  dying: 0
+  died: 0
+  destroyed: 1
+  debug: 0
+  active: 1
+  Cycles: []
+  primaryName: 
+  primaryForm: {fileID: 0}
+  shader: {fileID: 7200000, guid: 3fbcaf3aa9a0ea946a21267c3e9a0bc0, type: 3}
+  kernelName: Transfer
+  kernel: 0
+  executionTime: 0
+--- !u!114 &812304786
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 812304782}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4752c17bbf652d04bb1fa2f69c970f39, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  created: 0
+  begunGestation: 0
+  gestating: 0
+  gestated: 0
+  begunBirth: 0
+  birthing: 0
+  birthed: 0
+  begunLive: 0
+  living: 0
+  lived: 0
+  begunDeath: 0
+  dying: 0
+  died: 0
+  destroyed: 1
+  debug: 0
+  active: 0
+  Cycles: []
+  count: 0
+  intBuffer: 0
+  structSize: 0
+  description: 
+  timeToCreate: 0
+  totalMemory: 0
+  debugMaterial: {fileID: 0}
+  toIndex: {fileID: 812304787}
+  numSidesOfGem: 0
+  baseCount: 0
+--- !u!114 &812304787
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 812304782}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 656d62023fd19314e909278aa091ac91, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  created: 0
+  begunGestation: 0
+  gestating: 0
+  gestated: 0
+  begunBirth: 0
+  birthing: 0
+  birthed: 0
+  begunLive: 0
+  living: 0
+  lived: 0
+  begunDeath: 0
+  dying: 0
+  died: 0
+  destroyed: 1
+  debug: 0
+  active: 0
+  Cycles: []
+  count: 0
+  intBuffer: 0
+  structSize: 0
+  description: 
+  timeToCreate: 0
+  totalMemory: 0
+  debugMaterial: {fileID: 2100000, guid: bfdba931e444ed946a647d01a3fac6e5, type: 2}
+  baseVerts: {fileID: 601617157}
+  numSidesOfGem: 4
+--- !u!114 &812304788
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 812304782}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a4c7fa692e4cc426aa37fba780fcae78, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  created: 0
+  begunGestation: 0
+  gestating: 0
+  gestated: 0
+  begunBirth: 0
+  birthing: 0
+  birthed: 0
+  begunLive: 0
+  living: 0
+  lived: 0
+  begunDeath: 0
+  dying: 0
+  died: 0
+  destroyed: 1
+  debug: 0
+  active: 1
+  Cycles: []
+  auto: 0
+  Lifes: []
+  Forms: []
+  verts: {fileID: 812304787}
+  triangles: {fileID: 812304786}
+  render: {fileID: 0}
+  mesh: {fileID: 0}
+  filter: {fileID: 0}
+  self: 0
+  material: {fileID: 2100000, guid: f4265bc8fa13da34183dba857759e164, type: 2}
+  debugMaterial: {fileID: 0}
+--- !u!114 &812304789
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 812304782}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 446a70ec83f184c618be0ffaaba18b20, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  created: 0
+  begunGestation: 0
+  gestating: 0
+  gestated: 0
+  begunBirth: 0
+  birthing: 0
+  birthed: 0
+  begunLive: 0
+  living: 0
+  lived: 0
+  begunDeath: 0
+  dying: 0
+  died: 0
+  destroyed: 1
+  debug: 0
+  active: 1
+  Cycles:
+  - {fileID: 812304784}
+  auto: 0
+  Lifes: []
+  Forms: []
+  verts: {fileID: 812304787}
+  triangles: {fileID: 812304786}
+  transfer: {fileID: 812304785}
+  body: {fileID: 812304788}
+  showBody: 1
+  skeleton: {fileID: 601617157}
+  radius: 0.03
+  transformArray: []
+  cam: {fileID: 0}
+  right: {x: 0, y: 0, z: 0}
+  up: {x: 0, y: 0, z: 0}
+  forward: {x: 0, y: 0, z: 0}
 --- !u!1 &848703623
 GameObject:
   m_ObjectHideFlags: 0
@@ -2364,9 +3545,7 @@ MonoBehaviour:
   debug: 0
   active: 0
   Cycles:
-  - {fileID: 428842120}
-  - {fileID: 1993778134}
-  - {fileID: 848703624}
+  - {fileID: 601617154}
 --- !u!4 &920381532
 Transform:
   m_ObjectHideFlags: 0
@@ -2381,6 +3560,7 @@ Transform:
   - {fileID: 1993778129}
   - {fileID: 848703628}
   - {fileID: 428842115}
+  - {fileID: 601617158}
   m_Father: {fileID: 0}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -3027,7 +4207,7 @@ GameObject:
   - component: {fileID: 1993778131}
   - component: {fileID: 1993778130}
   m_Layer: 0
-  m_Name: Tubes
+  m_Name: Pretend
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
