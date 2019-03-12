@@ -25,6 +25,8 @@ Shader "Custom/Cloud" {
 
     Pass {
       
+
+      Cull Front
       //Blend SrcAlpha OneMinusSrcAlpha // Alpha blending
 
 

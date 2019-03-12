@@ -32,6 +32,7 @@ float _TubeRadius;
 
 float3 cubicFromValue( in float val , in int particleID, out float3 upPos , out float3 doPos ){
 
+    val += .01;
   float3 p0 = float3( 0. , 0. , 0. );
   float3 v0 = float3( 0. , 0. , 0. );
   float3 p1 = float3( 0. , 0. , 0. );
@@ -46,6 +47,8 @@ float3 cubicFromValue( in float val , in int particleID, out float3 upPos , out 
   int baseUp   = floor( base );
   int baseDown = ceil( base );
   float amount = base - float(baseUp);
+
+
 
 
   int bladeBase = (_NumVertsPerHair) * particleID;
@@ -87,7 +90,12 @@ float3 cubicFromValue( in float val , in int particleID, out float3 upPos , out 
   float3 c2 = p1 - v1/3.;
   float3 c3 = p1;
 
+
+
+
+
   float3 pos = cubicCurve( amount , c0 , c1 , c2 , c3 );
+
 
   upPos = cubicCurve( amount  + .01 , c0 , c1 , c2 , c3 );
   doPos = cubicCurve( amount  - .01 , c0 , c1 , c2 , c3 );
@@ -205,7 +213,7 @@ void BellTransfer (uint threadID : SV_GroupIndex, uint3 u3GroupID : SV_GroupID) 
     int row = idInTube / _TubeWidth;
     int col = pID % _TubeWidth;
 
-    float rowVal = float(row) / float(_TubeLength);
+    float rowVal = (float(row)) / float(_TubeLength);
     float colVal =  (float(col)/float(_TubeWidth)) ;
 
     float3 upPos; float3 doPos;

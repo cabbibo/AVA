@@ -29,7 +29,7 @@ Shader "Final/Gem"
             // Write to Stencil buffer (so that outline pass can read)
             Stencil
             {
-                Ref 4
+                Ref 99
                 Comp always
                 Pass replace
                 ZFail keep
@@ -257,7 +257,7 @@ sampler2D _MainTex;
             ZTest ON
             Stencil
             {
-                Ref 4
+                Ref 99
                 Comp notequal
                 Fail keep
                 Pass replace

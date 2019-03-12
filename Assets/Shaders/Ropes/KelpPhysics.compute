@@ -84,6 +84,39 @@ RWStructuredBuffer<Base> _BaseBuffer;
 uint _VertBuffer_COUNT;
 uint _BaseBuffer_COUNT;
 
+RWStructuredBuffer<Bone> _SDFBoneBuffer;
+int _SDFBoneBuffer_COUNT;
+
+#include "../Chunks/sdfFunctions.cginc"
+
+float2 map(float3 p){
+
+  float2 d = float2(1000000,0);
+  for( int i =0 ; i<_SDFBoneBuffer_COUNT;i++){
+
+    Bone b = _SDFBoneBuffer[i];
+    float2 newD = sdCapsule(p,b.start,b.end,b.size);
+
+    d = hardU( d , newD );
+  }
+
+  return d;
+
+
+}
+
+float3 calcNormal( in float3 pos ){
+
+  float3 eps = float3( 0.01, 0.0, 0.0 );
+  float3 nor = float3(
+      map(pos+eps.xyy).x - map(pos-eps.xyy).x,
+      map(pos+eps.yxy).x - map(pos-eps.yxy).x,
+      map(pos+eps.yyx).x - map(pos-eps.yyx).x );
+  return normalize(nor);
+
+}
+
+
 #include "../Chunks/safeID.cginc"
 
 float3 getVel( float3 p1 , float3 p2 ){
@@ -133,7 +166,7 @@ void Set (uint threadID : SV_GroupIndex, uint3 u3GroupID : SV_GroupID, uint3 id 
     vert.uv = float2( l , float(bID)/float(_BaseBuffer_COUNT));
     //vert.oPos = vert.pos;//base.pos + base.nor * l + _HairLength;
 
-    vert.debug.x = ((sin(float(bID)*10000)+ _HairVariance) / _HairVariance ) * _HairLength;
+    vert.debug.x = _HairLength;//((sin(float(bID)*10000)+ _HairVariance) / _HairVariance ) * _HairLength;
 
     _VertBuffer[pID] = vert;
 
@@ -160,7 +193,7 @@ void Collision (uint threadID : SV_GroupIndex, uint3 u3GroupID : SV_GroupID, uin
     if( base.used == 1 ){
 
     float3 bP = base.pos;//mul( transform,  float4(base.pos,1)).xyz;
-    float3 bN = base.nor;//normalize(mul( transform,  float4(base.nor,0))).xyz;
+    float3 bN = float3(0,1,0);//base.nor;//normalize(mul( transform,  float4(base.nor,0))).xyz;
     float3 s = float3(1,1,1);//mul( transform , float4(1,1,1,0)).xyz;
 
     float3 force = bN * _NormalForce;//float3( 0 , base.nor , 0.0 );
@@ -168,6 +201,14 @@ void Collision (uint threadID : SV_GroupIndex, uint3 u3GroupID : SV_GroupID, uin
     force += curlNoise( vert.pos * _NoiseSize + float3(0,_Time*_NoiseSpeed,0) ) * _NoiseForce;
     force += float3(0,_UpForce*vert.uv.x,0);
 
+ float2 d = map( vert.pos );
+
+  float3 n = calcNormal( vert.pos );
+
+  if( d.x < 0 ){
+
+    force += n * 1;
+  }
 
     //force += .2*normalize((_HandL-vert.pos))/pow(length(_HandL-vert.pos),4);
     //force += .2*normalize((_HandR-vert.pos))/pow(length(_HandR-vert.pos),4);
@@ -178,6 +219,8 @@ void Collision (uint threadID : SV_GroupIndex, uint3 u3GroupID : SV_GroupID, uin
       force = normalize(force) * 10;
     }
  
+
+
 
     bool tb = false;
 
@@ -412,6 +455,14 @@ void BunchCollision (uint threadID : SV_GroupIndex, uint3 u3GroupID : SV_GroupID
     force += float3(0,_UpForce*vert.uv.x,0);
 
 
+ float2 d = map( vert.pos );
+
+  float3 n = calcNormal( vert.pos );
+
+  if( d.x < 0 ){
+
+    force += n * 1000000;
+  }
     //force += .2*normalize((_HandL-vert.pos))/pow(length(_HandL-vert.pos),4);
     //force += .2*normalize((_HandR-vert.pos))/pow(length(_HandR-vert.pos),4);
     // Inertia: objects in motion stay in motion.
@@ -544,37 +595,6 @@ void RopeSet (uint threadID : SV_GroupIndex, uint3 u3GroupID : SV_GroupID, uint3
 
 
 
-RWStructuredBuffer<Bone> _SDFBoneBuffer;
-int _SDFBoneBuffer_COUNT;
-
-#include "../Chunks/sdfFunctions.cginc"
-
-float2 map(float3 p){
-
-  float2 d = float2(1000000,0);
-  for( int i =0 ; i<_SDFBoneBuffer_COUNT;i++){
-
-    Bone b = _SDFBoneBuffer[i];
-    float2 newD = sdCapsule(p,b.start,b.end,b.size);
-
-    d = hardU( d , newD );
-  }
-
-  return d;
-
-
-}
-
-float3 calcNormal( in float3 pos ){
-
-  float3 eps = float3( 0.01, 0.0, 0.0 );
-  float3 nor = float3(
-      map(pos+eps.xyy).x - map(pos-eps.xyy).x,
-      map(pos+eps.yxy).x - map(pos-eps.yxy).x,
-      map(pos+eps.yyx).x - map(pos-eps.yyx).x );
-  return normalize(nor);
-
-}
 
 
 float _Gravity;
@@ -616,7 +636,7 @@ void RopeCollision (uint threadID : SV_GroupIndex, uint3 u3GroupID : SV_GroupID,
 
   if( d.x < 0 ){
 
-    force += n * 1000000;
+    force += n * 1000;
   }
 
 //    force += curlNoise( vert.pos * _NoiseSize + float3(0,_Time*_NoiseSpeed,0) ) * _NoiseForce;

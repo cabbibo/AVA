@@ -123,6 +123,8 @@ vert.vel *= .9;
 
 vert.pos += vert.vel;
 
+vert.pos = fPos;
+
 
 
   

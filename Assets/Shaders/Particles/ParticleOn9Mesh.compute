@@ -17,15 +17,6 @@
   };
 
 
-/*struct SkinnedVert{
-  float3 pos;
-  float3 oPos;
-  float3 nor;
-  float3 tang;
-  float2 uv;
-  float2 debug;
-};*/
-
 
 struct SkinnedVert{
 
@@ -101,7 +92,7 @@ void PlacePoint(uint threadID : SV_GroupIndex, uint3 u3GroupID : SV_GroupID) {
 
   vert.debug = fPos.x;
   vert.vel = vert.pos;
-  vert.pos = fPos + normalize(fNor) * .004;
+  vert.pos = fPos;// + normalize(fNor) * .004;
 
   vert.vel = vert.pos - vert.vel;
   

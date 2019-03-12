@@ -13,16 +13,21 @@ public class HairNoise : Cycle {
   public float dampening;
   public float upForce;
 
+  public SDFBoneBuffer bones;
+
 
 
   // Use this for initialization
   public override void Bind() {
+
+    toBind.BindForm( "_SDFBoneBuffer" , bones );
     toBind.BindAttribute( "_NoiseSpeed" , "noiseSpeed" , this );
     toBind.BindAttribute( "_NoiseForce" , "noiseForce" , this );
     toBind.BindAttribute( "_NoiseSize" , "noiseSize" , this );
     toBind.BindAttribute( "_NormalForce" , "normalForce" , this );
     toBind.BindAttribute( "_Dampening" , "dampening" , this );
     toBind.BindAttribute( "_UpForce" , "upForce" , this );
+    toBind.BindAttribute( "_Gravity" , "upForce" , this );
   }
   
 

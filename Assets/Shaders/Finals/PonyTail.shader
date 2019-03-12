@@ -1,16 +1,13 @@
 ﻿Shader "Final/PonyTail" {
   Properties {
 
-        _CubeMap( "Cube Map" , Cube )  = "defaulttexture" {}
-
-        _Color("_Color",Color)=(1,0,0,1)
-        _Swap("_Swap",float)=0
-        _NoiseSize("_NoiseSize",float)=0
-        _NoiseSpeed("_NoiseSpeed",float)=0
 
 
-       _ColorMap ("ColorMap", 2D) = "white" {}
-       _NormalMap ("NormalMap", 2D) = "white" {}
+
+
+        _OutlineExtrusion("Outline Extrusion", float) = 0
+        _OutlineColor("Outline Color", Color) = (0, 0, 0, 1)
+
     
   }
 
@@ -109,22 +106,7 @@
         
                 fixed shadow = UNITY_SHADOW_ATTENUATION(v,v.worldPos );
                 
-                float4 nTex = tex2D(_NormalMap,float2(3,1) * .2*v.uv ) * 2 - 1;
-    float3 n =  v.nor * nTex.y  + v.tan * nTex.x * .1+ v.bi * nTex.y*.1;////normalize( normalize(float3( noise(v.worldPos*_NoiseSize) , noise(v.worldPos*_NoiseSize+10000) , noise(v.worldPos*_NoiseSize +100) -.5)) - 6*v.nor);
-            n = normalize(n);
 
-            float3 refl = reflect( normalize( v.eye) , n);
-
-                float3 fCol =refl;
-                if( _Swap >=1 ){ fCol =refl.yzx; }
-                if( _Swap >=2 ){ fCol =refl.zxy; }
-
-                refl= fCol;
-
-
-                float m = abs(dot( fCol, _WorldSpaceLightPos0.xyz ));
-
-                float3 tCol =texCUBE(_CubeMap , refl );
 
 float3 col;
                 col =   hsv(v.uv.x * .1 + sin(v.debug * .1) *.1 + .8 ,1,1);//3 * tCol * abs( refl * .3 + .7) * _Color;//lerp(tCol , tex2D(_ColorMap , float2(pow( m,4) * 4 + _Swap * .3,0)) , .6+pow(m,10));// * (fCol * .3 + .7);
@@ -192,6 +174,93 @@ float3 col;
       }
       ENDCG
     }
+
+            // Outline pass
+        Pass
+        {
+            // Won't draw where it sees ref value 4
+            Cull OFF
+            ZWrite ON
+            ZTest ON
+            Stencil
+            {
+                Ref 10
+                Comp notequal
+                Fail keep
+                Pass replace
+            }
+
+            CGPROGRAM
+            #pragma vertex vert
+            #pragma fragment frag
+
+            // Properties
+            uniform float4 _OutlineColor;
+            uniform float _OutlineSize;
+            uniform float _OutlineExtrusion;
+            uniform float _OutlineDot;
+
+            struct vertexInput
+            {
+                float4 vertex : POSITION;
+                float3 normal : NORMAL;
+            };
+
+            struct vertexOutput
+            {
+                float4 pos : SV_POSITION;
+                float4 color : COLOR;
+            };
+
+struct Vert{
+
+      float3 pos;
+      float3 vel;
+      float3 nor;
+      float3 tang;
+      float2 uv;
+    
+      float2 debug;
+
+
+    };      
+
+
+    StructuredBuffer<Vert> _TransferBuffer;
+
+
+              vertexOutput vert( uint id : SV_VertexID)
+      {
+                vertexOutput output;
+
+                float3 newPos = _TransferBuffer[id].pos;
+
+                // normal extrusion technique
+                float3 normal = normalize(_TransferBuffer[id].nor);
+                newPos += float4(normal, 0.0) * _OutlineExtrusion;
+
+                // convert to world space
+                output.pos = mul(UNITY_MATRIX_VP, float4(newPos, 1));
+
+                output.color = _OutlineColor;
+                return output;
+            }
+
+            float4 frag(vertexOutput input) : COLOR
+            {
+                // checker value will be negative for 4x4 blocks of pixels
+                // in a checkerboard pattern
+                //input.pos.xy = floor(input.pos.xy * _OutlineDot) * 0.5;
+                //float checker = -frac(input.pos.r + input.pos.g);
+
+                // clip HLSL instruction stops rendering a pixel if value is negative
+                //clip(checker);
+
+                return input.color;
+            }
+
+            ENDCG
+        }
 
 
 

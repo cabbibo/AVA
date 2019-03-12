@@ -7,7 +7,10 @@ public class HairBunchBinder : Cycle {
   public Life setLife;
   public Life simLife;
 
+
   public HairBunch hairBunch;
+  
+  public SDFBoneBuffer bones;
 
   public float _BunchOutForce;
 
@@ -17,6 +20,8 @@ public class HairBunchBinder : Cycle {
     setLife.BindAttribute( "_HairsPerPoint" , "hairsPerPoint" , hairBunch );
     simLife.BindAttribute( "_HairsPerPoint" , "hairsPerPoint" , hairBunch );
     simLife.BindAttribute( "_BunchOutForce" , "_BunchOutForce" , this );
+
+    simLife.BindForm( "_SDFBoneBuffer" , bones );
   }
   
 

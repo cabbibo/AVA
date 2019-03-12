@@ -10,8 +10,23 @@ struct Vert{
     float2 debug;
 };
 
+
+  struct Particle{
+
+    float3 pos;
+    float3 vel;
+    float3 nor;
+    float3 tangent;
+    float2 uv;
+    float used;
+    float3 triIDs;
+    float3 triWeights;
+    float3 debug;
+
+  };
+
 RWStructuredBuffer<Vert> _VertBuffer;
-RWStructuredBuffer<Vert> _SkeletonBuffer;
+RWStructuredBuffer<Particle> _SkeletonBuffer;
 
 int _VertBuffer_COUNT;
 int _SkeletonBuffer_COUNT;
@@ -41,7 +56,7 @@ void Transfer (uint threadID : SV_GroupIndex, uint3 u3GroupID : SV_GroupID) {
 
     int sID = (gemID) ;
     
-    Vert v = _SkeletonBuffer[safeID(sID,_SkeletonBuffer_COUNT)];
+    Particle v = _SkeletonBuffer[safeID(sID,_SkeletonBuffer_COUNT)];
 
 
 

@@ -18,6 +18,10 @@ public class Vector2FloatEvent : UnityEvent<Vector2,float>{}
 [System.Serializable]
 public class FloatEvent : UnityEvent<float>{}
 
+
+[System.Serializable]
+public class RayEvent : UnityEvent<Ray>{}
+
 public class TouchToRay : MonoBehaviour {
 
   public Vector2Event OnSwipe;
@@ -30,7 +34,7 @@ public class TouchToRay : MonoBehaviour {
   public UnityEvent OnTap;
   public UnityEvent OnDown;
   public UnityEvent OnUp;
-  public Vector2FloatEvent WhileDown;
+  public RayEvent WhileDown;
 
   public UnityEvent OnDebugTouch;
   
@@ -102,18 +106,23 @@ public class TouchToRay : MonoBehaviour {
     ray.direction = -RayDirection;//.normalized;
 
 
+
+
       if( Down == 1 && oDown == 0 ){
           JustDown = 1;
           touchID ++;
           startTime = Time.time;
           startPos = p;
+          whileDown();
           onDown();
       }
+
 
       if( Down == 1 && oDown == 1 ){
         JustDown = 0;
         whileDown();
       }
+
 
 
       if( Down == 0 && oDown == 1 ){
@@ -138,7 +147,7 @@ public class TouchToRay : MonoBehaviour {
   }
 
   void whileDown(){
-    WhileDown.Invoke( vel, Time.time-startTime  );
+    WhileDown.Invoke( ray );
   }
 
   void onDown(){

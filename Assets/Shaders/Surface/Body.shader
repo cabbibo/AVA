@@ -112,6 +112,7 @@ Shader "Final/BodyPost"
 				output.tan = input.tang;//.w * normalize(mul(input.tan, unity_WorldToObject).xyz);
 				output.world = input.pos;// mul(unity_ObjectToWorld, input.vertex).xyz;
 				output.vel = input.vel;
+        output.uv = input.uv;
 
 
                 TRANSFER_VERTEX_TO_FRAGMENT(output); // shadows
@@ -188,11 +189,11 @@ Shader "Final/BodyPost"
         float rVal = pow( reflMatch , _SparkleBright  ) * _SparkleBright;
        // col.xyz += tCol * hsv(rVal * _SparkleHue, 1,1) ;
 
-          if( col.a < .1){discard;}
+          //if( col.a < .1){discard;}
      
 
-
-				return float4(col.xyz * shadow, 1.0);
+          col.xyz= col.xyz * shadow;
+				return float4(col.xyz, 1.0);
 			}
 
 			ENDCG

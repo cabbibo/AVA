@@ -32,6 +32,8 @@ public class Bones: Form {
     count = bones.Length;
 
     values = new float[count * structSize ];  
+
+    tmpMat = new Matrix4x4();
   }
 
 public override void WhileLiving( float v ){
