@@ -1,0 +1,117 @@
+﻿
+#pragma kernel Transfer
+
+struct Vert{
+    float3 pos;
+    float3 vel;
+    float3 nor;
+    float3 tang;
+    float2 uv;
+    float2 debug;
+};
+
+
+  struct Particle{
+
+    float3 pos;
+    float3 vel;
+    float3 nor;
+    float3 tangent;
+    float2 uv;
+    float used;
+    float3 triIDs;
+    float3 triWeights;
+    float3 debug;
+
+  };
+
+RWStructuredBuffer<Vert> _VertBuffer;
+RWStructuredBuffer<Particle> _SkeletonBuffer;
+
+int _VertBuffer_COUNT;
+int _SkeletonBuffer_COUNT;
+#include "../Chunks/safeID.cginc"
+#include "../Chunks/noise.cginc"
+
+int _VertsPerGem;
+int _NumVertsPerHair;
+float3 _CameraUp;
+float3 _CameraRight;
+float3 _CameraForward;
+float _Radius;
+
+float _GirderWidth;
+float _GirderLength;
+
+
+
+#define NR_THREADS 128
+[numthreads(NR_THREADS,1,1)]
+void Transfer (uint threadID : SV_GroupIndex, uint3 u3GroupID : SV_GroupID) {
+
+
+    int pID = threadID + u3GroupID.x * NR_THREADS;
+
+    int transferID = pID;
+    int which = pID % 12;
+    int whichQuad = which / 4;
+    int whichInQuad = which  % 4;
+
+    int gemID = (transferID / 12);
+
+    int sID = (gemID) ;
+    
+    Particle v = _SkeletonBuffer[safeID(sID,_SkeletonBuffer_COUNT)];
+
+
+
+    float3 fPos; float2 fUV; float3 fNor; float2 fDebug;
+
+    float hVal = hash( float(gemID))  + .5;
+
+
+    float3 y = normalize(normalize(v.nor));
+    float3 x; float3 z;
+    if( whichQuad == 0 ){
+      x = normalize( cross(y,normalize(v.tangent)));
+      z = normalize( cross(y,x)); 
+    }else if( whichQuad == 1 ){
+      x = normalize( cross(y,normalize(v.tangent)));
+      z = normalize( cross(y,x)); 
+      float3 t = z;
+      z = x;
+      x = t;
+    }else{
+      x = normalize( cross(y,normalize(v.tangent)));
+      z = normalize( cross(y,x)); 
+      float3 t = z;
+      z = x;
+      x = -t;
+    }
+
+    float xNormalized = float(whichInQuad%2);
+    float yNormalized = float((whichInQuad/2));
+    float xVal = (xNormalized -.5) * _GirderWidth;
+    float yVal = (yNormalized) *_GirderLength;
+
+    float v2  = clamp( float(whichQuad ) , 0, 1); 
+
+    Vert fV;
+    fV.uv = float2(xNormalized,yNormalized);
+    fV.nor = normalize( cross(x,y));
+    fV.pos = v.pos + xVal * x * (1-.4*(1-v2)) + yVal * y + fV.nor * _GirderWidth * .5 * .6 * v2;//* v2;// *  float( v2);
+    fV.tang = x;
+    fV.vel = v.vel;
+
+
+
+    fV.debug = float2( float(transferID) , float( whichQuad ) );
+
+    pID = safeID(pID,_VertBuffer_COUNT);
+
+    _VertBuffer[pID] = fV;
+
+
+}
+
+

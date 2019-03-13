@@ -33,7 +33,7 @@ int _SkeletonBuffer_COUNT;
 #include "../Chunks/safeID.cginc"
 #include "../Chunks/noise.cginc"
 
-int _VertsPerGem = 6;
+int _VertsPerGem;
 int _NumVertsPerHair;
 float3 _CameraUp;
 float3 _CameraRight;
