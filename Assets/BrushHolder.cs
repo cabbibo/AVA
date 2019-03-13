@@ -57,8 +57,7 @@ public class BrushHolder : State
   public override void Activate(){
     brushes[activeBrush].drawable = true;
     animations.animator.Play("T-Pose");
-
-
+    stateMachine.SetInfo(brushes[activeBrush].gameObject.name);
   }
 
 

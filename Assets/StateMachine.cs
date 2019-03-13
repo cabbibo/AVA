@@ -12,18 +12,26 @@ public class StateMachine : Cycle
 
 
   public TextMesh title;
+  public TextMesh stateTitle;
 
   public void SetInfo(string info){
-    title.text = info;
+    title.text = "DATA  : " + info;
   }
+
+  public void SetStateTitle( string info ){
+    stateTitle.text = "STATE : " + info;
+  }
+
+  
   public override void Create(){
     for( int i = 0; i < states.Length; i++ ){
       Cycles.Add(states[i]);
     }
   }
   public override void OnLive(){
-    print("hi");
+
     states[activeState]._Activate();
+    SetStateTitle( states[activeState].gameObject.name );
   }
 
   public void verticalSwipe( float val ){
@@ -33,11 +41,13 @@ public class StateMachine : Cycle
       activeState ++;
       activeState %= states.Length;
       states[activeState]._Activate();
+    SetStateTitle( states[activeState].gameObject.name );
     }else{
       states[activeState].Deactivate();
       activeState --;
       if( activeState < 0 ){ activeState += states.Length;}
       states[activeState]._Activate();
+    SetStateTitle( states[activeState].gameObject.name );
     }
 
   }

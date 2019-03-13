@@ -113,13 +113,11 @@ public class PlaceParticlesOnMesh : LifeForm {
 
   public void CheckForNew(){
     if( trace.down ){
-      print( "trace hit");
       LastHitPoint = CurrentHitPoint;
       CurrentHitPoint = trace.hitPoint;
       if( LastHitPoint != CurrentHitPoint ){
       Vector3 dist = LastHitPoint - CurrentHitPoint;
       if( dist.magnitude > minDist ){
-        print("new dude being made");
         SetParticleInfo( currentID );
         currentID ++;
         currentID %= particles.count;
@@ -128,7 +126,7 @@ public class PlaceParticlesOnMesh : LifeForm {
       }}
 
     }else{
-      print("trace not hit");
+      //print("trace not hit");
     }
 
   }
@@ -155,11 +153,12 @@ public class PlaceParticlesOnMesh : LifeForm {
     values[4] = 0;
     values[5] = 0;
 
+    print( trace.hitNormal );
     values[6] = trace.hitNormal.x;
     values[7] = trace.hitNormal.y;
     values[8] = trace.hitNormal.z;
 
-    values[9] = trace.hitTangent.x;
+    values[9]  = trace.hitTangent.x;
     values[10] = trace.hitTangent.y;
     values[11] = trace.hitTangent.z;
 
@@ -180,6 +179,8 @@ public class PlaceParticlesOnMesh : LifeForm {
     values[22] = 0;
     values[23] = 0;
 
+    print( particles.structSize);
+    print("hmmmmm");
     particles._buffer.SetData( values , 0 , id * particles.structSize , 24 );
 
   }

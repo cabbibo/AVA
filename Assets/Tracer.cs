@@ -39,7 +39,13 @@ public class Tracer : MonoBehaviour
           person.sharedMesh.triangles[ hit.triangleIndex * 3 + 0 ],
           person.sharedMesh.triangles[ hit.triangleIndex * 3 + 1 ],
           person.sharedMesh.triangles[ hit.triangleIndex * 3 + 2 ]);
+
+
           bary = hit.barycentricCoordinate;
+
+          hitTangent  = bary.x * HELP.ToV3( person.sharedMesh.tangents[(int)triIDs.x] );
+          hitTangent += bary.y * HELP.ToV3( person.sharedMesh.tangents[(int)triIDs.y] );
+          hitTangent += bary.z * HELP.ToV3( person.sharedMesh.tangents[(int)triIDs.z] );
       
       }else{
 

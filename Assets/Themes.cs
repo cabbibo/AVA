@@ -7,6 +7,7 @@ public class Themes : State
 
   public int activeTheme;
 
+  public StateMachine stateMachine;
   public Theme[] themes;
 
   public Body body;
@@ -14,7 +15,7 @@ public class Themes : State
   public MeshRenderer platform;
 
   public override void Create(){
-
+    SetActiveTheme();
 
   }
 
@@ -39,6 +40,8 @@ public class Themes : State
     body.render.material = themes[activeTheme].bodyMat;
     background.material = themes[activeTheme].skyboxMat;
     platform.material = themes[activeTheme].platformMat;
+
+    stateMachine.SetInfo(themes[activeTheme].themeName);
   }
 
 

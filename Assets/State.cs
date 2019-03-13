@@ -12,6 +12,13 @@ public class State : Cycle
   }
 
 
+  public GameObject[] subStates;
+
+  public virtual void CreateSubStates(){
+
+  }
+
+
 
 
 }

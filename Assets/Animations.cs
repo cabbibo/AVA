@@ -7,6 +7,8 @@ public class Animations : State
 
   public int activeAnimation;
 
+  public StateMachine stateMachine;
+  
   public Animator animator;
   public string[] animations;
 
@@ -30,12 +32,16 @@ public class Animations : State
       animator.Play(animations[activeAnimation]);
     }
 
+    stateMachine.SetInfo(animations[activeAnimation]);
   }
 
 
 
   public override void Activate(){
     //animations[activeBrush].drawable = true;
+
+
+    stateMachine.SetInfo(animations[activeAnimation]);
 
     
   }

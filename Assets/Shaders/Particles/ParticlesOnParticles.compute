@@ -1,0 +1,112 @@
+﻿
+#pragma kernel Force
+
+#include "../Chunks/noise.cginc"
+#include "../Chunks/snoise.cginc"
+#include "../Chunks/curlNoise.cginc"
+
+
+float4x4 transform; 
+
+float _Delta;
+float _Time;
+
+int _ParticlesPerParticle;
+
+struct Vert{
+  float3 pos;
+  float3 vel;
+  float3 nor;
+  float3 tang;
+  float2 uv;
+  float2 debug;
+};
+
+
+
+struct Base{
+  float3 pos;
+  float3 vel;
+  float3 nor;
+  float3 tang;
+  float2 uv;
+  float used;
+  float3 triIDs;
+  float3 triWeights;
+  float3 debug;
+};
+
+
+
+
+float _NormalForce;
+float _NoiseForce;
+float _NoiseSpeed;
+float _NoiseSize;
+float _Dampening;
+
+RWStructuredBuffer<Vert> _VertBuffer;
+RWStructuredBuffer<Base> _BaseBuffer;
+
+uint _VertBuffer_COUNT;
+uint _BaseBuffer_COUNT;
+
+#include "../Chunks/safeID.cginc"
+#define NR_THREADS 64
+[numthreads(NR_THREADS,1,1)]
+void Force(uint threadID : SV_GroupIndex, uint3 u3GroupID : SV_GroupID, uint3 id : SV_DispatchThreadID) {
+
+  //int pID = id.x + id.y * gridX + id.z * gridX * gridY;
+
+  uint pID = threadID + u3GroupID.x * NR_THREADS;
+  uint bID = pID / _ParticlesPerParticle;
+  if( pID < _VertBuffer_COUNT && bID < _BaseBuffer_COUNT ){
+
+    pID = safeID( pID , _VertBuffer_COUNT );
+    bID = safeID( bID , _BaseBuffer_COUNT );
+    Vert vert = _VertBuffer[pID];
+    Base base = _BaseBuffer[bID];
+
+    if( base.used == 1 ){
+
+    float3 bP = base.pos;//mul( transform,  float4(base.pos,1)).xyz;
+    float3 bN = base.nor;//normalize(mul( transform,  float4(base.nor,0))).xyz;
+    float3 s = float3(1,1,1);//mul( transform , float4(1,1,1,0)).xyz;
+
+    float3 force = bN * _NormalForce;//float3( 0 , base.nor , 0.0 );
+
+    force += curlNoise( vert.pos  );
+    force += float3(0,1,0);
+
+
+
+    if( vert.debug.x <= 0 ){
+
+      vert.debug.x += hash( float(pID) );
+      vert.pos = base.pos;
+      vert.vel = .01*float3(hash(float(pID*10))-.5,hash(float(pID*20))-.5,hash(float(pID*30))-.5);
+    }else{
+    vert.debug.x -= .01;
+
+    vert.vel += force * .001;
+
+    vert.nor = normalize(vert.vel + float3(0,.0001,0));
+    vert.tang = normalize( cross( vert.nor , float3(0,1,0)));
+
+    vert.pos += vert.vel;
+    vert.vel *= .9;
+  }
+
+    _VertBuffer[pID] = vert;
+  }else{
+    vert.pos = float3(1000,0,0);
+    //vert.vel = float3(1000,0,0);
+    _VertBuffer[pID] = vert;
+  }
+
+  }
+  
+}
+
+
+

@@ -193,13 +193,13 @@ void Collision (uint threadID : SV_GroupIndex, uint3 u3GroupID : SV_GroupID, uin
     if( base.used == 1 ){
 
     float3 bP = base.pos;//mul( transform,  float4(base.pos,1)).xyz;
-    float3 bN = float3(0,1,0);//base.nor;//normalize(mul( transform,  float4(base.nor,0))).xyz;
+    float3 bN = base.nor;//normalize(mul( transform,  float4(base.nor,0))).xyz;
     float3 s = float3(1,1,1);//mul( transform , float4(1,1,1,0)).xyz;
 
     float3 force = bN * _NormalForce;//float3( 0 , base.nor , 0.0 );
 
     force += curlNoise( vert.pos * _NoiseSize + float3(0,_Time*_NoiseSpeed,0) ) * _NoiseForce;
-    force += float3(0,_UpForce*vert.uv.x,0);
+   // force += float3(0,_UpForce*vert.uv.x,0);
 
  float2 d = map( vert.pos );
 
@@ -333,7 +333,7 @@ void Constraint(uint threadID : SV_GroupIndex, uint3 u3GroupID : SV_GroupID, uin
       // We want to make sure that l isn't zero, 
       // or we will get some NaNs
       if( l > 0.001 ){
-        difference = ((s*v1.debug.x/float(_NumVertsPerHair)) - l ) / l;
+        difference = ((_HairLength/float(_NumVertsPerHair))-l)/l;//((s*v1.debug.x/float(_NumVertsPerHair)) - l ) / l;
       }
 
       // Here is where the actual verlet goes down!
@@ -412,11 +412,11 @@ void BunchSet (uint threadID : SV_GroupIndex, uint3 u3GroupID : SV_GroupID, uint
     float3 s = float3(1,1,1);//mul( transform , float4(1,1,1,0)).xyz;
 
     float l = float(pID % _NumVertsPerHair ) / float(_NumVertsPerHair);
-    //vert.pos  = bP + bN * l *(length(s)/3)* _HairLength;
+    vert.pos  = float3(0,0,1) + bN * l * _HairLength;
     vert.uv = float2( l , float(bID)/float(_BaseBuffer_COUNT));
     //vert.oPos = vert.pos;//base.pos + base.nor * l + _HairLength;
 
-    vert.debug.x = ((sin(float(bID)*10000)+ _HairVariance) / _HairVariance ) * _HairLength;
+   // vert.debug.x = ((sin(float(bID)*10000)+ _HairVariance) / _HairVariance ) * _HairLength;
 
     _VertBuffer[pID] = vert;
 
@@ -441,12 +441,12 @@ void BunchCollision (uint threadID : SV_GroupIndex, uint3 u3GroupID : SV_GroupID
     Vert vert = _VertBuffer[pID];
     Base base = _BaseBuffer[bID];
 
-    if( base.used == 1 ){
+    if( base.used > .9 ){
 
     float h1 = hash( float(hairID*10000 + bID));
     float h2 = hash( float(hairID * 10 + bID * 10));
     float3 bP = base.pos;//mul( transform,  float4(base.pos,1)).xyz;
-    float3 bN = normalize(base.nor+ (h1-.5) * normalize(base.tang) * _BunchOutForce + (h2-.5) * normalize(cross(base.tang,base.nor)) * _BunchOutForce);//normalize(mul( transform,  float4(base.nor,0))).xyz;
+    float3 bN = normalize(base.nor + (h1-.5) * normalize(base.tang) * 1 + (h2-.5) * normalize(cross(base.tang,base.nor)) * 1);//normalize(mul( transform,  float4(base.nor,0))).xyz;
     float3 s = float3(1,1,1);//mul( transform , float4(1,1,1,0)).xyz;
 
     float3 force = bN * _NormalForce;//float3( 0 , base.nor , 0.0 );
@@ -461,7 +461,7 @@ void BunchCollision (uint threadID : SV_GroupIndex, uint3 u3GroupID : SV_GroupID
 
   if( d.x < 0 ){
 
-    force += n * 1000000;
+    //force += n * 1000000;
   }
     //force += .2*normalize((_HandL-vert.pos))/pow(length(_HandL-vert.pos),4);
     //force += .2*normalize((_HandR-vert.pos))/pow(length(_HandR-vert.pos),4);
@@ -476,13 +476,13 @@ void BunchCollision (uint threadID : SV_GroupIndex, uint3 u3GroupID : SV_GroupID
     bool tb = false;
 
     if( length(vert.pos) == 0 ){
-      vert.pos  = bP + bN * vert.uv.x * vert.debug.x;
+      vert.pos  = bP + bN * vert.uv.x;//* vert.debug.x;
       vert.oPos = vert.pos;
       tb = true;
     }
 
-    if( length(vert.pos.x) == 1000 ){
-      vert.pos  = bP + bN * vert.uv.x * vert.debug.x;
+    if( vert.pos.x > 900 ){
+      vert.pos  = bP + bN * vert.uv.x;// * vert.debug.x;
       vert.oPos = vert.pos;
       tb = true;
     }
@@ -505,6 +505,8 @@ void BunchCollision (uint threadID : SV_GroupIndex, uint3 u3GroupID : SV_GroupID
 
     }
 
+ //   vert.pos = base.pos + bN * .2 * vert.uv.x;
+
     /*if( length(vert.pos) > .2 ){
       vert.pos = bP + bN * .1 * vert.uv.x; 
       vert.oPos = bP+ bN * .1 * vert.uv.x; 
@@ -519,7 +521,7 @@ void BunchCollision (uint threadID : SV_GroupIndex, uint3 u3GroupID : SV_GroupID
 
     //vert.nor = normalize(vert.pos - vert.oPos);
 
-    if( _Delta  < .1 && tb == false ){
+    if( tb == false ){
 
       float dampening =_Dampening;//.99999;// - vert.life * .01;
       float3 next = vert.pos + vel * dampening + force * _Delta * _Delta;
@@ -529,6 +531,7 @@ void BunchCollision (uint threadID : SV_GroupIndex, uint3 u3GroupID : SV_GroupID
 
     }
 
+     vert.pos = base.pos +  float3(1,1,0) * vert.uv.x;
     _VertBuffer[pID] = vert;
   }else{
     vert.pos = float3(1000,0,0);
@@ -779,8 +782,10 @@ float3 s = length(mul( transform , float4(1,1,1,0)).xyz)/3;
       
       // We want to make sure that l isn't zero, 
       // or we will get some NaNs
+     // We want to make sure that l isn't zero, 
+      // or we will get some NaNs
       if( l > 0.001 ){
-        difference = ((s*v1.debug.x/float(_NumVertsPerHair)) - l ) / l;
+        difference = ((_HairLength/float(_NumVertsPerHair))-l)/l;//((s*v1.debug.x/float(_NumVertsPerHair)) - l ) / l;
       }
 
       // Here is where the actual verlet goes down!

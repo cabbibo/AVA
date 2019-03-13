@@ -6,6 +6,7 @@ public class HairRibbonVerts: Form {
 
   public Hair hair;
   public int length;
+  [HideInInspector] public int width = 2;
   public int numHairs;
 
   public override void SetStructSize(){ structSize = 16; }
