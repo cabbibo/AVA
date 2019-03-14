@@ -158,9 +158,16 @@ public virtual void Embody( Mesh mesh ){
     }
 
 
-    SetData( values );
-}
+    
+  SetData( values );
+  }else{
+
+float[] values = new float[count*structSize];
+
+  SetData( values );
   }
+
+}
 
 
 /*

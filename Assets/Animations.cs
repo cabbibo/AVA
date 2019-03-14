@@ -20,6 +20,10 @@ public class Animations : State
 
   }
 
+  public override void WhileLiving(float v){
+    numberStates = animations.Length;
+    currentState = activeAnimation;
+  }
   public override void horizontalSwipe( float val ){
 
     if( val < 0 ){
@@ -32,7 +36,8 @@ public class Animations : State
       animator.Play(animations[activeAnimation]);
     }
 
-    stateMachine.SetInfo(animations[activeAnimation]);
+    stateMachine.SetTitle(animations[activeAnimation]);
+    stateMachine.SetInfo(activeAnimation,animations.Length);
   }
 
 
@@ -41,7 +46,9 @@ public class Animations : State
     //animations[activeBrush].drawable = true;
 
 
-    stateMachine.SetInfo(animations[activeAnimation]);
+
+    stateMachine.SetTitle(animations[activeAnimation]);
+    stateMachine.SetInfo(activeAnimation,animations.Length);
 
     
   }

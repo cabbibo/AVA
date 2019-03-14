@@ -207,7 +207,7 @@ void Collision (uint threadID : SV_GroupIndex, uint3 u3GroupID : SV_GroupID, uin
 
   if( d.x < 0 ){
 
-    force += n * 1;
+    force += n * 100000;
   }
 
     //force += .2*normalize((_HandL-vert.pos))/pow(length(_HandL-vert.pos),4);
@@ -461,7 +461,7 @@ void BunchCollision (uint threadID : SV_GroupIndex, uint3 u3GroupID : SV_GroupID
 
   if( d.x < 0 ){
 
-    //force += n * 1000000;
+    force += n * 1000;
   }
     //force += .2*normalize((_HandL-vert.pos))/pow(length(_HandL-vert.pos),4);
     //force += .2*normalize((_HandR-vert.pos))/pow(length(_HandR-vert.pos),4);

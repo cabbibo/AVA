@@ -41,7 +41,14 @@ public class Themes : State
     background.material = themes[activeTheme].skyboxMat;
     platform.material = themes[activeTheme].platformMat;
 
-    stateMachine.SetInfo(themes[activeTheme].themeName);
+    stateMachine.SetTitle(themes[activeTheme].themeName);
+    stateMachine.SetInfo(activeTheme,themes.Length);
+  }
+
+
+  public override void WhileLiving(float v){
+    numberStates = themes.Length;
+    currentState = activeTheme;
   }
 
 

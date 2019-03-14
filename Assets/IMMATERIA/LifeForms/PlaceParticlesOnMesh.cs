@@ -187,7 +187,7 @@ public class PlaceParticlesOnMesh : LifeForm {
 
   public override void Activate(){
     print("loading");
-    Saveable.Load(particles,"DNA/"+fileName); 
+   // Saveable.Load(particles,"DNA/"+fileName); 
   }
 
   public override void Deactivate(){

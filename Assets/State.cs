@@ -11,12 +11,8 @@ public class State : Cycle
 
   }
 
-
-  public GameObject[] subStates;
-
-  public virtual void CreateSubStates(){
-
-  }
+  public int numberStates;
+  public int currentState;
 
 
 

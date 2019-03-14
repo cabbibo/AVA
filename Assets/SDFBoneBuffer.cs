@@ -54,7 +54,7 @@ public class SDFBoneBuffer : Form
       if( t.GetComponent<SDFSizeMultiplier>() != null ){
          bones[boneID].size *= t.GetComponent<SDFSizeMultiplier>().sizeMultiplier;
       }
-      print(bones[boneID].start);
+//      print(bones[boneID].start);
       boneID ++;
       percolateBoneInfo(t.GetChild(i));
     }

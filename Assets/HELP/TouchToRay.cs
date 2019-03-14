@@ -35,14 +35,20 @@ public class TouchToRay : MonoBehaviour {
   public UnityEvent OnDown;
   public UnityEvent OnUp;
   public RayEvent WhileDown;
+  public Vector2Event WhileDown2;
 
   public UnityEvent OnDebugTouch;
   
 
   public Vector3 RayOrigin;
   public Vector3 RayDirection;
+  
   public float Down;
   public float oDown;
+  
+  public float Down2;
+  public float oDown2;
+
   public float JustDown;
   public float JustUp;
   public Vector2 startPos;
@@ -58,6 +64,10 @@ public class TouchToRay : MonoBehaviour {
   public Vector2 oP; 
   public Vector2 vel;
 
+  public Vector2 p2;
+  public Vector2 oP2;
+  public Vector2 vel2;
+
   public int touchID = 0;
 
   void Start(){}
@@ -67,6 +77,9 @@ public class TouchToRay : MonoBehaviour {
 
     oP = p;
     oDown = Down;
+
+    oP2 = p2;
+    oDown2 = Down2;
 
     #if UNITY_EDITOR  
       if (Input.GetMouseButton (0)) {
@@ -82,8 +95,17 @@ public class TouchToRay : MonoBehaviour {
       if( Input.GetMouseButtonDown(0) &&   Input.GetKey("space") ){
         OnDebugTouch.Invoke();
       }
+
+      if( Input.GetMouseButton(1)){
+       
+         p2 =   Input.mousePosition;
+         Down2 = 1;
+      }else{
+        Down2 = 0;
+        oP2 = oP;
+      }
     #else
-      if (Input.touchCount > 0 ){
+      if (Input.touchCount == 1 ){
         Down = 1;
         p  =  Input.GetTouch(0).position;
 
@@ -96,9 +118,25 @@ public class TouchToRay : MonoBehaviour {
         Down = 0;
         oP = p;
       }
+
+      if (Input.touchCount == 2 ){
+        Down2 = 1;
+        p2  =  Input.GetTouch(0).position;
+
+        if( Input.touchCount > 2 ){
+          if( Input.GetTouch(0).phase == TouchPhase.Began || Input.GetTouch(1).phase == TouchPhase.Began || Input.GetTouch(2).phase == TouchPhase.Began ){
+            OnDebugTouch.Invoke();
+          }
+        }
+      }else{
+        Down2 = 0;
+        oP2 = p2;
+      }
     #endif
 
-        RayOrigin = Camera.main.ScreenToWorldPoint( new Vector3( p.x , p.y , Camera.main.nearClipPlane ) );
+    
+
+    RayOrigin = Camera.main.ScreenToWorldPoint( new Vector3( p.x , p.y , Camera.main.nearClipPlane ) );
     RayDirection = (Camera.main.transform.position - RayOrigin).normalized;
 
 
@@ -121,6 +159,10 @@ public class TouchToRay : MonoBehaviour {
       if( Down == 1 && oDown == 1 ){
         JustDown = 0;
         whileDown();
+      }
+
+      if( Down2 == 1 && oDown2 == 1 ){
+        whileDown2();
       }
 
 
@@ -149,6 +191,11 @@ public class TouchToRay : MonoBehaviour {
   void whileDown(){
     WhileDown.Invoke( ray );
   }
+
+  void whileDown2(){
+    WhileDown2.Invoke( p2 - oP2 );
+  }
+
 
   void onDown(){
     OnDown.Invoke();

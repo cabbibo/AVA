@@ -33,6 +33,13 @@ public class BrushHolder : State
     collision.sharedMesh = bakedMesh;
   }
 
+
+
+  public override void WhileLiving(float v){
+    numberStates = brushes.Length;
+    currentState = activeBrush;
+  }
+
   public override void horizontalSwipe( float val ){
 
     if( val < 0 ){
@@ -48,7 +55,8 @@ public class BrushHolder : State
     }
 
     
-      stateMachine.SetInfo(brushes[activeBrush].gameObject.name);
+    stateMachine.SetInfo(activeBrush,brushes.Length);
+      stateMachine.SetTitle(brushes[activeBrush].gameObject.name);
 
   }
 
@@ -56,8 +64,10 @@ public class BrushHolder : State
 
   public override void Activate(){
     brushes[activeBrush].drawable = true;
-    animations.animator.Play("T-Pose");
-    stateMachine.SetInfo(brushes[activeBrush].gameObject.name);
+    animations.animator.Play("T-Pose");    
+    stateMachine.SetInfo(activeBrush,brushes.Length);
+      stateMachine.SetTitle(brushes[activeBrush].gameObject.name);
+
   }
 
 

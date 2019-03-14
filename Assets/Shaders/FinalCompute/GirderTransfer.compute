@@ -99,7 +99,7 @@ void Transfer (uint threadID : SV_GroupIndex, uint3 u3GroupID : SV_GroupID) {
     Vert fV;
     fV.uv = float2(xNormalized,yNormalized);
     fV.nor = normalize( cross(x,y));
-    fV.pos = v.pos + xVal * x * (1-.4*(1-v2)) + yVal * y + fV.nor * _GirderWidth * .5 * .6 * v2;//* v2;// *  float( v2);
+    fV.pos = v.pos + xVal * x * (1-.4*(v2)) + yVal * y + fV.nor * _GirderWidth * .5 * v2;//* v2;// *  float( v2);
     fV.tang = x;
     fV.vel = v.vel;
 
