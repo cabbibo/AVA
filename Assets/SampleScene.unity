@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 170076734}
-  m_IndirectSpecularColor: {r: 0.44657898, g: 0.4964133, b: 0.5748178, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657844, g: 0.49641222, b: 0.57481694, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -1620,7 +1620,7 @@ MonoBehaviour:
   mesh: {fileID: 0}
   filter: {fileID: 0}
   self: 0
-  material: {fileID: 2100000, guid: f4265bc8fa13da34183dba857759e164, type: 2}
+  material: {fileID: 2100000, guid: f543e8a31275f4bed82eb7b60b26e1aa, type: 2}
   debugMaterial: {fileID: 0}
 --- !u!114 &463379644
 MonoBehaviour:
@@ -2825,7 +2825,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: 40849c61dd7394a3c8b43ddb8e346af5, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -5292,10 +5292,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a0b883a79de2d4046a261bc995620cb0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  themeName: Shiny
-  skyboxMat: {fileID: 2100000, guid: 3f1ada77973eb43c48eb85ec6a202641, type: 2}
+  themeName: Cry
+  skyboxMat: {fileID: 2100000, guid: 659e61f2792314068a0ec0efcb8876ea, type: 2}
   bodyMat: {fileID: 2100000, guid: ada2791d022e34e01bf625edabed2a10, type: 2}
-  platformMat: {fileID: 2100000, guid: 3f1ada77973eb43c48eb85ec6a202641, type: 2}
+  platformMat: {fileID: 2100000, guid: 40849c61dd7394a3c8b43ddb8e346af5, type: 2}
 --- !u!114 &1753829325
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5366,9 +5366,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   themeName: Sparkle
-  skyboxMat: {fileID: 2100000, guid: 7d134bd30e70d4696b59d0da9fec0b07, type: 3}
+  skyboxMat: {fileID: 2100000, guid: 112b6e730e49e4ff085e3bf195ecbba2, type: 2}
   bodyMat: {fileID: 2100000, guid: d86c4272b08ad46d4a76fc5566013afe, type: 2}
-  platformMat: {fileID: 0}
+  platformMat: {fileID: 2100000, guid: 25396dc40543a45dd8b3abd6bb3693d4, type: 2}
 --- !u!114 &1753829328
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6444,7 +6444,7 @@ MonoBehaviour:
   mesh: {fileID: 0}
   filter: {fileID: 0}
   self: 0
-  material: {fileID: 2100000, guid: da9c2bc52997d477795f1af864bb48e4, type: 2}
+  material: {fileID: 2100000, guid: 7008c59cd0e4740bdafe098046ebedca, type: 2}
   debugMaterial: {fileID: 0}
 --- !u!114 &2110994821
 MonoBehaviour:
