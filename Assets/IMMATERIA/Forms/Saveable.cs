@@ -38,9 +38,9 @@ public class Saveable {
         int[] data = bf.Deserialize(stream) as int[];
         form.SetDNA(data);
       }else{
-        Debug.Log("we've loaged it");
+  //      Debug.Log("we've loaged it");
         float[] data = bf.Deserialize(stream) as float[];
-        Debug.Log(data.Length);
+//        Debug.Log(data.Length);
         form.SetDNA(data);
       }
       stream.Close();

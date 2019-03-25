@@ -73,7 +73,7 @@ public class HairBasic : LifeForm {
   }
 
   public override void Activate(){
-//    print("activated");
+    print("hairo activado");
     SetHairPosition.Live();
     SetHairPosition.active = false;
   }

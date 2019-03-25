@@ -66,7 +66,7 @@ public class BrushHolder : State
     brushes[activeBrush].drawable = true;
     animations.animator.Play("T-Pose");    
     stateMachine.SetInfo(activeBrush,brushes.Length);
-      stateMachine.SetTitle(brushes[activeBrush].gameObject.name);
+    stateMachine.SetTitle(brushes[activeBrush].gameObject.name);
 
   }
 

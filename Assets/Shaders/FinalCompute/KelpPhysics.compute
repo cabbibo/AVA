@@ -434,12 +434,17 @@ void BunchCollision (uint threadID : SV_GroupIndex, uint3 u3GroupID : SV_GroupID
   uint pID = threadID + u3GroupID.x * NR_THREADS;  
   uint hairID = pID / _NumVertsPerHair;
   uint bID = hairID / _HairsPerPoint;
+
+
   if( pID < _VertBuffer_COUNT && bID < _BaseBuffer_COUNT ){
 
     pID = safeID( pID , _VertBuffer_COUNT );
     bID = safeID( bID , _BaseBuffer_COUNT );
     Vert vert = _VertBuffer[pID];
     Base base = _BaseBuffer[bID];
+
+    float l = float(pID % _NumVertsPerHair ) / float(_NumVertsPerHair);
+    vert.uv = float2( l , float(bID)/float(_BaseBuffer_COUNT));
 
     if( base.used > .9 ){
 

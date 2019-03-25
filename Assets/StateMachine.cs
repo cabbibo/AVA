@@ -9,6 +9,7 @@ public class StateMachine : Cycle
   public State[] states;
   public int activeState;
   public TitleMaker titleMaker;
+  public TitleMaker avatarNameMaker;
   public Glitch glitch;
 
 
@@ -27,6 +28,7 @@ public class StateMachine : Cycle
   public GameObject upperData;
   public GameObject subStateData;
   public GameObject pushButton1;
+  public GameObject avatarName;
 
   public bool downUp;
   public bool horizontal;
@@ -34,6 +36,10 @@ public class StateMachine : Cycle
 
   public void SetTitle(string info){
     title.text = "DATA  : " + info;
+  }
+
+  public void SetAvatar( string info ){
+    avatarName.GetComponent<TextMesh>().text = info;
   }
 
   public void SetInfo(int number , int total){
@@ -127,6 +133,7 @@ public class StateMachine : Cycle
     }
 
     titleMaker.StartMaking();
+    avatarNameMaker.StartMaking();
     
     SetMap();
   
@@ -140,6 +147,7 @@ public class StateMachine : Cycle
 
     upperData.transform.position = screenData.topLeft;
     subStateData.transform.position = screenData.bottomLeft + screenData.up *(states.Length+1) * .2f;
+    avatarName.transform.position = screenData.bottomLeft + screenData.up *(states.Length+3) * .2f;
 
     
     pushButton1.transform.position = screenData.bottomRight;
@@ -147,6 +155,7 @@ public class StateMachine : Cycle
     pushButton1.transform.position += -screenData.right * pushButton1.transform.localScale.x  * .5f;
     
 
+    avatarNameMaker = avatarName.GetComponent<TitleMaker>();
 
     maps = new GameObject[states.Length];
     for( int i = 0; i < states.Length; i++ ){

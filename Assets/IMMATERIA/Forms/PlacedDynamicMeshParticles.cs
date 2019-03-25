@@ -26,6 +26,8 @@ public class PlacedDynamicMeshParticles: Particles {
 
   public override void SetStructSize(){  structSize = 24; }
 
+  public int currentParticle;
+
 
 
   /*
@@ -212,9 +214,13 @@ float[] values = new float[count*structSize];
 
     float[] data = new float[count*structSize];
 
-    print( count );
+//    print( count );
+
+    currentParticle = 0;
 
     for( int i = 0; i < (dna.Length/7); i++ ){
+
+      if( dna[i*7+0] != 0 ){ currentParticle ++;}
       data[i*24+14] = dna[i*7+0];
       data[i*24+15] = dna[i*7+1];
       data[i*24+16] = dna[i*7+2];

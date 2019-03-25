@@ -32,14 +32,31 @@ public class AvatarSaver : State
   public BrushHolder brushHolder;
   public Themes themes;
   public Animations animations;
+  public StateMachine stateMachine;
 
- 
+  public int currentFrame = 0;
   public override void WhileLiving(float v){
     numberStates = avatars.Length;
     currentState = activeAvatar;
+    
+
+    // Hack to make sure our hair loads the first time
+    currentFrame ++;
+    if( currentFrame == 1 ){
+      horizontalSwipe( 1 );
+    }
+    if( currentFrame == 2 ){
+      horizontalSwipe( -1 );
+    }
   }
 
+
   public override void OnLive(){
+    currentFrame = 0;
+    //Load();
+  }
+
+  public override void OnGestated(){
     avatars = new AvatarData[9];
 
 
@@ -51,13 +68,13 @@ public class AvatarSaver : State
 
       for( int j = 0; j < brushHolder.brushes.Length; j++ ){
         string fullName = "/DNA/" + brushHolder.brushes[j].name + "_" + i + ".dna";
-        print( Application.streamingAssetsPath  +fullName );
+//        print( Application.streamingAssetsPath  +fullName );
 
         if (System.IO.File.Exists(Application.streamingAssetsPath  +fullName)){
 
-          print("IT EXITS");
+  //        print("IT EXITS");
         }else{
-          print("hello");
+    //      print("hello");
           Saveable.Save(brushHolder.brushes[j].particles,"DNA/"+brushHolder.brushes[j].name + "_" + i ); 
 
         }
@@ -65,13 +82,13 @@ public class AvatarSaver : State
       } 
 
 
-      print( "fullName:  " + Application.streamingAssetsPath  +avatarFileName);
+    //  print( "fullName:  " + Application.streamingAssetsPath  +avatarFileName);
       if (System.IO.File.Exists(Application.streamingAssetsPath  +avatarFileName)){
-        print("it exists");
+      //  print("it exists");
       //do stuff
 
       
-        Debug.Log("loading from lodabale");
+//        Debug.Log("loading from lodabale");
         BinaryFormatter bf = new BinaryFormatter();
         FileStream stream = File.OpenRead(Application.streamingAssetsPath  + avatarFileName);
      
@@ -88,7 +105,9 @@ public class AvatarSaver : State
 
 
     }
+
     Load(avatars[0]);
+
   }
 
 
@@ -107,11 +126,23 @@ public class AvatarSaver : State
    }
 
    Load();
-
+   SetTitles();
 
   }
 
+  void SetTitles(){
 
+    stateMachine.SetTitle("AVATAR " + activeAvatar + " ENGAGED");
+    stateMachine.SetInfo(activeAvatar,avatars.Length);
+
+    string name = "A V A  v" + activeAvatar +".0";
+    stateMachine.SetAvatar(name);
+  }
+
+
+  public override void Activate(){
+    SetTitles();
+  }
   public override void Deactivate(){}
 
 
@@ -206,6 +237,10 @@ public class AvatarSaver : State
 
       animations.activeAnimation = data.animationID;
       animations.SetActiveAnimation();
+
+      for( int i = 0; i  < brushHolder.brushes.Length; i++ ){
+        brushHolder.brushes[i]._Activate(); 
+      }
 
 
     }
