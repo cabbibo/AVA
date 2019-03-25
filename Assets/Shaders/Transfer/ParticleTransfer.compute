@@ -13,10 +13,11 @@ struct Vert{
 
 struct Particle{
     float3 pos;
+    float3 vel;
     float3 nor;
     float3 tangent;
     float2 uv;
-    float debug;
+    float2 debug;
 };
 
 RWStructuredBuffer<Vert> _VertBuffer;
@@ -30,6 +31,7 @@ int _VertsPerVert;
 int _NumVertsPerHair;
 float3 _CameraUp;
 float3 _CameraRight;
+float3 _CameraForward;
 float _Radius;
 
 
@@ -45,13 +47,16 @@ void Transfer (uint threadID : SV_GroupIndex, uint3 u3GroupID : SV_GroupID) {
     Particle p = _SkeletonBuffer[safeID( transferID , _SkeletonBuffer_COUNT )];
     
 
-    float3 fPos; float2 fUV; float3 fNor; float2 fDebug;
+    float3 fPos; float2 fUV; float3 fNor; float2 fDebug; float3 fVel; float3 fTang;
+
+    fVel = p.vel;
+
+    float3 x = normalize(cross(_CameraForward , normalize(p.vel))); //_CameraRight;
+    float3 y = normalize(cross(_CameraForward , x )) * 1.6;//_CameraUp;
+    float r = _Radius  * min( p.debug.x , (1-p.debug.x));
 
 
-    float3 x = _CameraRight;
-    float3 y = _CameraUp;
-    float r = _Radius;
-
+    fTang = x;
 
     fPos = p.pos;
 
@@ -83,7 +88,9 @@ void Transfer (uint threadID : SV_GroupIndex, uint3 u3GroupID : SV_GroupID) {
 
     _VertBuffer[pID].pos = fPos;
     _VertBuffer[pID].uv = fUV;
-    _VertBuffer[pID].nor = cross(_CameraRight,_CameraUp);// fNor;
+    _VertBuffer[pID].vel = fVel;
+    _VertBuffer[pID].tangent = fTang;
+    _VertBuffer[pID].nor = normalize(cross(_CameraRight,_CameraUp));// fNor;
     _VertBuffer[pID].debug = fDebug;
 
 }

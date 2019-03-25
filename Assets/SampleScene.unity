@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 170076734}
-  m_IndirectSpecularColor: {r: 0.44657844, g: 0.49641222, b: 0.57481694, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657898, g: 0.4964133, b: 0.5748178, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -730,7 +730,7 @@ GameObject:
   - component: {fileID: 155089822}
   - component: {fileID: 155089821}
   m_Layer: 0
-  m_Name: GameObject
+  m_Name: Particles on particles
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -746,7 +746,8 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
+  m_Children:
+  - {fileID: 1272816760}
   m_Father: {fileID: 1594009760}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -851,7 +852,8 @@ MonoBehaviour:
   destroyed: 1
   debug: 0
   active: 0
-  Cycles: []
+  Cycles:
+  - {fileID: 1272816765}
   auto: 0
   Lifes: []
   Forms: []
@@ -1620,7 +1622,7 @@ MonoBehaviour:
   mesh: {fileID: 0}
   filter: {fileID: 0}
   self: 0
-  material: {fileID: 2100000, guid: f543e8a31275f4bed82eb7b60b26e1aa, type: 2}
+  material: {fileID: 2100000, guid: f4265bc8fa13da34183dba857759e164, type: 2}
   debugMaterial: {fileID: 0}
 --- !u!114 &463379644
 MonoBehaviour:
@@ -2076,6 +2078,7 @@ MonoBehaviour:
   - {fileID: 426885971}
   activeState: 0
   titleMaker: {fileID: 971369288}
+  avatarNameMaker: {fileID: 0}
   glitch: {fileID: 534669908}
   mapPrefab: {fileID: 971369286}
   aud: {fileID: 482583970}
@@ -2825,7 +2828,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 40849c61dd7394a3c8b43ddb8e346af5, type: 2}
+  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -3959,7 +3962,7 @@ MonoBehaviour:
   mesh: {fileID: 971369289}
   currentLetter: 0
   making: 0
-  speed: 0.02
+  speed: 0.001
   lastLetterTime: 0
   aud: {fileID: 971369287}
   next: {fileID: 744739823}
@@ -4374,6 +4377,234 @@ MonoBehaviour:
   Cycles: []
   toBind: {fileID: 1189626923}
   verts: {fileID: 1189626925}
+--- !u!1 &1272816759
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1272816760}
+  - component: {fileID: 1272816765}
+  - component: {fileID: 1272816764}
+  - component: {fileID: 1272816763}
+  - component: {fileID: 1272816762}
+  - component: {fileID: 1272816761}
+  m_Layer: 0
+  m_Name: ParticleBody
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1272816760
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1272816759}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 155089820}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1272816761
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1272816759}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 521ed2d62d2034941a1197389f9c70d5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  created: 0
+  begunGestation: 0
+  gestating: 0
+  gestated: 0
+  begunBirth: 0
+  birthing: 0
+  birthed: 0
+  begunLive: 0
+  living: 0
+  lived: 0
+  begunDeath: 0
+  dying: 0
+  died: 0
+  destroyed: 1
+  debug: 0
+  active: 0
+  Cycles: []
+  primaryName: 
+  primaryForm: {fileID: 0}
+  shader: {fileID: 7200000, guid: 1c9d7b0bd7d024ed9a7714f720da9a9f, type: 3}
+  kernelName: Transfer
+  kernel: 0
+  executionTime: 0
+--- !u!114 &1272816762
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1272816759}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 680b865801f4c1d43bd6290a0978f391, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  created: 0
+  begunGestation: 0
+  gestating: 0
+  gestated: 0
+  begunBirth: 0
+  birthing: 0
+  birthed: 0
+  begunLive: 0
+  living: 0
+  lived: 0
+  begunDeath: 0
+  dying: 0
+  died: 0
+  destroyed: 1
+  debug: 0
+  active: 0
+  Cycles: []
+  count: 0
+  intBuffer: 0
+  structSize: 0
+  description: 
+  timeToCreate: 0
+  totalMemory: 0
+  debugMaterial: {fileID: 0}
+  toIndex: {fileID: 1272816763}
+--- !u!114 &1272816763
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1272816759}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: be38e848f91acc5468ed9ad538b089aa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  created: 0
+  begunGestation: 0
+  gestating: 0
+  gestated: 0
+  begunBirth: 0
+  birthing: 0
+  birthed: 0
+  begunLive: 0
+  living: 0
+  lived: 0
+  begunDeath: 0
+  dying: 0
+  died: 0
+  destroyed: 1
+  debug: 0
+  active: 0
+  Cycles: []
+  count: 0
+  intBuffer: 0
+  structSize: 0
+  description: 
+  timeToCreate: 0
+  totalMemory: 0
+  debugMaterial: {fileID: 0}
+  particles: {fileID: 155089822}
+--- !u!114 &1272816764
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1272816759}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a4c7fa692e4cc426aa37fba780fcae78, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  created: 0
+  begunGestation: 0
+  gestating: 0
+  gestated: 0
+  begunBirth: 0
+  birthing: 0
+  birthed: 0
+  begunLive: 0
+  living: 0
+  lived: 0
+  begunDeath: 0
+  dying: 0
+  died: 0
+  destroyed: 1
+  debug: 0
+  active: 0
+  Cycles: []
+  auto: 0
+  Lifes: []
+  Forms: []
+  verts: {fileID: 1272816763}
+  triangles: {fileID: 1272816762}
+  render: {fileID: 0}
+  mesh: {fileID: 0}
+  filter: {fileID: 0}
+  self: 0
+  material: {fileID: 2100000, guid: 7fb5b20a118e2c245a53c51b1c623684, type: 2}
+  debugMaterial: {fileID: 0}
+--- !u!114 &1272816765
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1272816759}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 446a70ec83f184c618be0ffaaba18b20, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  created: 0
+  begunGestation: 0
+  gestating: 0
+  gestated: 0
+  begunBirth: 0
+  birthing: 0
+  birthed: 0
+  begunLive: 0
+  living: 0
+  lived: 0
+  begunDeath: 0
+  dying: 0
+  died: 0
+  destroyed: 1
+  debug: 0
+  active: 0
+  Cycles: []
+  auto: 0
+  Lifes: []
+  Forms: []
+  verts: {fileID: 1272816763}
+  triangles: {fileID: 1272816762}
+  transfer: {fileID: 1272816761}
+  body: {fileID: 1272816764}
+  showBody: 0
+  skeleton: {fileID: 155089822}
+  radius: 1
+  transformArray: []
+  cam: {fileID: 0}
+  right: {x: 0, y: 0, z: 0}
+  up: {x: 0, y: 0, z: 0}
+  forward: {x: 0, y: 0, z: 0}
 --- !u!1 &1545401125
 GameObject:
   m_ObjectHideFlags: 0
@@ -4738,7 +4969,7 @@ MonoBehaviour:
   debug: 0
   active: 1
   Cycles: []
-  count: 100
+  count: 30
   intBuffer: 0
   structSize: 0
   description: 
@@ -5365,7 +5596,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a0b883a79de2d4046a261bc995620cb0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  themeName: Sparkle
+  themeName: Immaterial
   skyboxMat: {fileID: 2100000, guid: 112b6e730e49e4ff085e3bf195ecbba2, type: 2}
   bodyMat: {fileID: 2100000, guid: d86c4272b08ad46d4a76fc5566013afe, type: 2}
   platformMat: {fileID: 2100000, guid: 25396dc40543a45dd8b3abd6bb3693d4, type: 2}
@@ -6444,7 +6675,7 @@ MonoBehaviour:
   mesh: {fileID: 0}
   filter: {fileID: 0}
   self: 0
-  material: {fileID: 2100000, guid: 7008c59cd0e4740bdafe098046ebedca, type: 2}
+  material: {fileID: 2100000, guid: da9c2bc52997d477795f1af864bb48e4, type: 2}
   debugMaterial: {fileID: 0}
 --- !u!114 &2110994821
 MonoBehaviour:

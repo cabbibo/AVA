@@ -25,6 +25,21 @@
   };
 
 
+
+struct Particle{
+  float3 pos;
+  float3 vel;
+  float3 nor;
+  float3 tang;
+  float2 uv;
+  float used;
+  float3 triIDs;
+  float3 triWeights;
+  float3 debug;
+};
+
+
+
 struct Bone{
   float4x4 transform;
   float4x4 bindPose;
@@ -32,11 +47,13 @@ struct Bone{
 
 int _VertBuffer_COUNT;
 int _SkeletonBuffer_COUNT;
+int _DisformParticles_COUNT;
 
 #include "../Chunks/noise.cginc"
 
 RWStructuredBuffer<Vert> _VertBuffer;
 RWStructuredBuffer<Bone> _SkeletonBuffer;
+RWStructuredBuffer<Particle> _DisformParticles;
 
 
 float _ReturnSpringStrength;
@@ -115,15 +132,24 @@ vert.tang = fTan;
 float3 force = 0;
 
 float3 dif = fPos - vert.pos;
-force += dif * .1;
+force += dif * .6;
+
+for( int i =0; i < _DisformParticles_COUNT; i++ ){
+  Particle p = _DisformParticles[i];
+  if( length( p.pos != 0 )){
+
+  float3 d = (p.pos - vert.pos);
+ // force -= .004 * normalize(d) /  (pow(length(d)*10,2) + .1);// * .01;
+}
+}
 
 vert.vel += force;
-vert.vel *= .9;
+vert.vel *= .7;
 
 
 vert.pos += vert.vel;
 
-vert.pos = fPos;
+//vert.pos = fPos;
 
 
 

@@ -8,6 +8,11 @@ Shader "Bodies/SmoothShiny"
         _OutlineExtrusion("Outline Extrusion", float) = 0
         _OutlineColor("Outline Color", Color) = (0, 0, 0, 1)
         _CubeMap( "Cube Map" , Cube )  = "defaulttexture" {}
+
+    _NumberSteps( "Number Steps", Int ) = 6
+    _MaxTraceDistance( "Max Trace Distance" , Float ) = 10.0
+    _IntersectionPrecision( "Intersection Precision" , Float ) = 0.001
+
     
     }
 
@@ -66,7 +71,22 @@ Shader "Bodies/SmoothShiny"
     };
 
 
+struct Particle{
+  float3 pos;
+  float3 vel;
+  float3 nor;
+  float3 tang;
+  float2 uv;
+  float used;
+  float3 triIDs;
+  float3 triWeights;
+  float3 debug;
+};
+
   StructuredBuffer<Vert> _TransferBuffer;
+  StructuredBuffer<Particle> _DisformParticles;
+
+  int _DisformParticles_COUNT;
 
 
             struct vertexOutput
@@ -77,6 +97,7 @@ Shader "Bodies/SmoothShiny"
                 float3 world : TEXCOORD3;
                 float3 tan : TEXCOORD4;
                 float3 vel : TEXCOORD5;
+                float3 closest : TEXCOORD6;
                 LIGHTING_COORDS(1,2) // shadows
             };
 
@@ -97,13 +118,116 @@ Shader "Bodies/SmoothShiny"
                 output.vel = input.vel;
                 output.uv = input.uv;
 
+                float3 closest = float3(1000000,0,0);
+                for( int i = 0; i < _DisformParticles_COUNT; i++ ){
+
+                  Particle p  = _DisformParticles[i];
+                  if( length(p.pos-input.pos) < length( closest)){
+                    closest = p.pos - input.pos;
+                  }
+                }
+
+                output.closest = closest;
 
                 TRANSFER_VERTEX_TO_FRAGMENT(output); // shadows
                 return output;
             }
 
+
+      uniform int _NumberSteps;
+      uniform float  _IntersectionPrecision;
+      uniform float _MaxTraceDistance;
+   float sdSphere( float3 p, float s ){
+        return length(p)-s;
+      }
+
+
+float map( float3 p ){
+  
+  return min( sdSphere(p - float3(0,1.,-.5),.3) + noise( p * 10) * .1 , -sdSphere( p - float3(0,1.,-.5),1)+ noise( p * 20) * .1);
+
+}
+  float3 calcNormal( in float3 pos ){
+
+        float3 eps = float3( 0.001, 0.0, 0.0 );
+        float3 nor = float3(
+            map(pos+eps.xyy).x - map(pos-eps.xyy).x,
+            map(pos+eps.yxy).x - map(pos-eps.yxy).x,
+            map(pos+eps.yyx).x - map(pos-eps.yyx).x );
+        return normalize(nor);
+
+      }
+
+      float2 calcIntersection( in float3 ro , in float3 rd ){     
+            
+               
+        float h =  _IntersectionPrecision * 2;
+        float t = 0.0;
+        float res = -1.0;
+        float id = -1.0;
+        
+        for( int i=0; i< _NumberSteps; i++ ){
+            
+            if( h < _IntersectionPrecision || t > _MaxTraceDistance ) break;
+    
+            float3 pos = ro + rd*t;
+            float2 m = map( pos );
+            
+            h = m.x;
+            t += h;
+            id = m.y;
+            
+        }
+    
+    
+        if( t <  _MaxTraceDistance ){ res = t; }
+        if( t >  _MaxTraceDistance ){ id = -1.0; }
+        
+        return float2( res , id );
+          
+      
+      }
+          
+
+   
+
+float3 regCol( float3 ro , float3 rd ){
+
+
+  float2 res = calcIntersection( ro , rd );
+  float3 col = float3(0,0,0);
+
+  if( res.y > -.5){
+           
+   float3 pos = ro + rd * res.x;
+          float3 norm = calcNormal( pos );
+          col = norm * .5 + .5;
+  }
+  /*for( float i = 0; i < 10; i++ ){
+    float3 fPos = ro + rd * i * .1; 
+    float n = noise( fPos * 50 );
+    col += hsv( n , 1,1);
+  }
+  col /= 3;*/
+  return col;
+}
             float4 frag(vertexOutput v) : COLOR
             {
+
+
+
+               float3 closest = float3(1000000,0,0);
+                for( int i = 0; i < _DisformParticles_COUNT; i++ ){
+
+                  Particle p  = _DisformParticles[i];
+                  if( length(p.pos-v.world) < length( closest)){
+                    closest = p.pos - v.world;
+                  }
+                }
+
+               // output.closest = closest;
+
+
                 // lighting mode
 
                                   float3 fNor = v.normal;//normalize(cross(dx,dy));//v.normal;//normalize(v.normal + noise(float3( v.texCoord.xy * 100  + float2(_Time.y * 1.4 , _Time.y * 2), _Time.y )) * v.tan);
@@ -126,6 +250,13 @@ Shader "Bodies/SmoothShiny"
         float3 col;
         
         col = tCol * shadow;
+
+        float radius = .1;
+        float mult = 4;
+
+        float d = length( closest ) + .02 *noise( v.world * 100 );
+
+        if(  d < radius ){ col = lerp( col , regCol( v.world, eye) ,saturate( mult*(radius -d) / radius )) ; }
                 return float4(col.xyz, 1.0);
             }
 

@@ -1,7 +1,7 @@
 ﻿// Upgrade NOTE: replaced '_Object2World' with 'unity_ObjectToWorld'
 
 
-Shader "Finals/OK"
+Shader "Finals/OKToCry"
 {
     Properties
     {
@@ -104,7 +104,18 @@ struct Vert{
                 output.tan = input.tang;//.w * normalize(mul(input.tan, unity_WorldToObject).xyz);
                 output.world = input.pos;// mul(unity_ObjectToWorld, input.vertex).xyz;
                 output.vel = input.vel;
+                output.uv = input.uv;
 
+
+
+
+                float2 uvVals = input.uv - float2( .5 , .2 ); 
+                float mult = .8;
+
+                float3 up = normalize(cross(input.nor, input.tang ));
+                float3 fNor = UNITY_MATRIX_IT_MV[2].xyz + mult*input.tang.xyz * uvVals.x + mult*up * uvVals.y;//;normalize(v.vel);//normalize(cross(dx,dy));//v.normal;//normalize(v.normal + noise(float3( v.texCoord.xy * 100  + float2(_Time.y * 1.4 , _Time.y * 2), _Time.y )) * v.tan);
+             
+                output.normal = fNor;
 
                 TRANSFER_VERTEX_TO_FRAGMENT(output); // shadows
                 return output;
@@ -114,39 +125,33 @@ struct Vert{
             {
                 // lighting mode
 
-        float3 dx = ddx( v.world );
-        float3 dy = ddy( v.world );
-                                float3 n = normalize(float3(noise(v.world * 20),
-                                                                        noise(v.world * 20+10),
-                                                                        noise(v.world * 20+20)));
+     
 
-
-                float3 fNor = v.normal;//normalize(cross(dx,dy));//v.normal;//normalize(v.normal + noise(float3( v.texCoord.xy * 100  + float2(_Time.y * 1.4 , _Time.y * 2), _Time.y )) * v.tan);
+                //float2 uvVals = v.uv - float2( .5 , .7 ); 
+                //float mult = .8;
+                //float3 fNor = UNITY_MATRIX_IT_MV[2].xyz + mult*UNITY_MATRIX_IT_MV[0].xyz * uvVals.x + mult*UNITY_MATRIX_IT_MV[1].xyz * uvVals.y;//;normalize(v.vel);//normalize(cross(dx,dy));//v.normal;//normalize(v.normal + noise(float3( v.texCoord.xy * 100  + float2(_Time.y * 1.4 , _Time.y * 2), _Time.y )) * v.tan);
                 
-                // convert light direction to world space & normalize
+                float3 fNor = v.normal;//normalize( fNor );
+                float3 eye = _WorldSpaceCameraPos - v.world;
+
+                float3 bgCol = float3(
+                                  texCUBE( _CubeMap , refract( -normalize(eye) , -fNor , 1)).r,
+                                  texCUBE( _CubeMap , refract( -normalize(eye) , -fNor , .6)).g,
+                                  texCUBE( _CubeMap , refract( -normalize(eye) , -fNor , .2)).b
+                                );
+
+
+                                // convert light direction to world space & normalize
                 // _WorldSpaceLightPos0 provided by Unity
                 float3 lightDir = normalize(_WorldSpaceLightPos0.xyz);
 
-                // finds location on ramp texture that we should sample
-                // based on angle between surface normal and light direction
-                float ramp = clamp(dot(fNor, lightDir), 0, 1.0);
-        
-                float3 eye = normalize(_WorldSpaceCameraPos - v.world);
-                float3 refrR = refract( eye , fNor ,.96);
-                float3 refrG = refract( eye , fNor ,.93);
-                float3 refrB = refract( eye , fNor ,.9);
-
-
-                float match = dot( eye , fNor );
-
-
-                float3 tColR = texCUBE(_CubeMap,refrR);
-                float3 tColG = texCUBE(_CubeMap,refrG);
-                float3 tColB = texCUBE(_CubeMap,refrB);
-
                 float attenuation = LIGHT_ATTENUATION(v); // shadow value
                 float3 rgb;// = lighting*attenuation*ramp;//lbedo.rgb * _LightColor0.rgb * lighting * _Color.rgb * attenuation;
-               float3 col = float3(tColR.r,tColG.g , tColB.b);
+               float4 tCol = tex2D(_MainTex ,v.uv);//float3(tColR.r,tColG.g , tColB.b);
+
+               float3 col = tCol.xyz;// * hsv( dot(normalize(v.vel),float3(0,1,0)) * 1,1,1) * 2.;//*100;
+               col = bgCol;
+               if( tCol.x > .3 ){ discard; }
 
         fixed shadow = UNITY_SHADOW_ATTENUATION(v,v.world) * .9 + .1 ;
 
@@ -155,7 +160,7 @@ struct Vert{
      
 
 
-                return float4(col, 1.0);
+                return float4(col  * shadow, 1.0);
             }
 
             ENDCG
@@ -212,101 +217,22 @@ sampler2D _MainTex;
       {
         v2f o;
         o.pos = mul(UNITY_MATRIX_VP, float4(_TransferBuffer[id].pos, 1));
+        o.uv = _TransferBuffer[id].uv;
         return o;
       }
 
       float4 frag(v2f i) : COLOR
       {
+        float4 tCol = tex2D(_MainTex ,i.uv);//float3(tColR.r,tColG.g , tColB.b);
+
+        if( tCol.x > .3 ){ discard; }
+
         SHADOW_CASTER_FRAGMENT(i)
       }
       ENDCG
     }
+
+  }
   
-        // Outline pass
-        Pass
-        {
-            // Won't draw where it sees ref value 4
-            Cull OFF
-            ZWrite ON
-            ZTest ON
-            Stencil
-            {
-                Ref 4
-                Comp notequal
-                Fail keep
-                Pass replace
-            }
 
-            CGPROGRAM
-            #pragma vertex vert
-            #pragma fragment frag
-
-            // Properties
-            uniform float4 _OutlineColor;
-            uniform float _OutlineSize;
-            uniform float _OutlineExtrusion;
-            uniform float _OutlineDot;
-
-            struct vertexInput
-            {
-                float4 vertex : POSITION;
-                float3 normal : NORMAL;
-            };
-
-            struct vertexOutput
-            {
-                float4 pos : SV_POSITION;
-                float4 color : COLOR;
-            };
-
-struct Vert{
-
-      float3 pos;
-      float3 vel;
-      float3 nor;
-      float3 tang;
-      float2 uv;
-    
-      float2 debug;
-
-
-    };      
-
-
-    StructuredBuffer<Vert> _TransferBuffer;
-
-
-              vertexOutput vert( uint id : SV_VertexID)
-      {
-                vertexOutput output;
-
-                float3 newPos = _TransferBuffer[id].pos;
-
-                // normal extrusion technique
-                float3 normal = normalize(_TransferBuffer[id].nor);
-                newPos += float4(normal, 0.0) * _OutlineExtrusion;
-
-                // convert to world space
-                output.pos = mul(UNITY_MATRIX_VP, float4(newPos, 1));
-
-                output.color = _OutlineColor;
-                return output;
-            }
-
-            float4 frag(vertexOutput input) : COLOR
-            {
-                // checker value will be negative for 4x4 blocks of pixels
-                // in a checkerboard pattern
-                //input.pos.xy = floor(input.pos.xy * _OutlineDot) * 0.5;
-                //float checker = -frac(input.pos.r + input.pos.g);
-
-                // clip HLSL instruction stops rendering a pixel if value is negative
-                //clip(checker);
-
-                return input.color;
-            }
-
-            ENDCG
-        }
-    }
 }
