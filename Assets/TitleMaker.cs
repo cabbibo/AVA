@@ -19,17 +19,17 @@ public class TitleMaker : MonoBehaviour
 
   int totalCount;
   public void StartMaking(){
-    print("splitting");
-    print( mesh.text.Length);
+//    print("splitting");
+//    print( mesh.text.Length);
     stringArray = mesh.text.Split(" "[0]);
-    print( stringArray.Length );
+//    print( stringArray.Length );
     lastLetterTime = Time.time + speed * 4;
 
     totalCount= 0;
     for( int i = 0; i < stringArray.Length; i++ ){
       totalCount += stringArray[i].Length;
     }
-    print( totalCount );
+  //  print( totalCount );
     
     Reset();
     making = true;
@@ -46,7 +46,7 @@ public class TitleMaker : MonoBehaviour
     aud.pitch = Random.Range( .6f , 1.4f );
     aud.Play();
     if( currentLetter == totalCount ){
-      print("donzo");
+//      print("donzo");
       making = false;
       if( next != null ){ next.StartMaking(); }
     }

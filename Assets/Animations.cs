@@ -40,12 +40,16 @@ public class Animations : State
     stateMachine.SetInfo(activeAnimation,animations.Length);
   }
 
+  public void SetActiveAnimation(){
+    animator.Play(animations[activeAnimation]);
+  }
+
 
 
   public override void Activate(){
     //animations[activeBrush].drawable = true;
 
-
+    animator.Play(animations[activeAnimation]);
 
     stateMachine.SetTitle(animations[activeAnimation]);
     stateMachine.SetInfo(activeAnimation,animations.Length);

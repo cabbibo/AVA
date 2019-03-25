@@ -67,13 +67,13 @@ public class HairBasic : LifeForm {
 
   public override void OnBirth(){
 
-    print("birthed");
+  //  print("birthed");
     SetHairPosition.Live();
     SetHairPosition.active = false;
   }
 
   public override void Activate(){
-    print("activated");
+//    print("activated");
     SetHairPosition.Live();
     SetHairPosition.active = false;
   }

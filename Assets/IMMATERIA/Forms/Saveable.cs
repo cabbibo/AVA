@@ -25,6 +25,8 @@ public class Saveable {
   }
 
   public static void Load(Form form , string name){
+
+    Debug.Log( name );
     if( File.Exists(Application.streamingAssetsPath  + "/"+name+".dna")){
       
       Debug.Log("loading from lodabale");
@@ -38,9 +40,9 @@ public class Saveable {
       }else{
         Debug.Log("we've loaged it");
         float[] data = bf.Deserialize(stream) as float[];
+        Debug.Log(data.Length);
         form.SetDNA(data);
       }
-
       stream.Close();
     }else{
       Debug.Log("Why would you load something that doesn't exist?!??!?");
