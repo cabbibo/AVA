@@ -16,12 +16,17 @@ public class StateMachine : Cycle
 
   public AudioSource aud;
 
+  public ScreenData screenData;
+
   public TextMesh title;
   public TextMesh stateTitle;
   public TextMesh info;
   public TextMesh map;
 
   public GameObject[] maps;
+  public GameObject upperData;
+  public GameObject subStateData;
+  public GameObject pushButton1;
 
   public bool downUp;
   public bool horizontal;
@@ -54,7 +59,9 @@ public class StateMachine : Cycle
       }else{
         maps[i].GetComponent<Renderer>().material.SetColor("_Color", Color.green);
       }
+
       states[i].WhileLiving(1);
+
       string fText="";
       fText += states[i].gameObject.name;
       for( int j = 0; j < 10-states[i].gameObject.name.Length ;j++){
@@ -128,16 +135,28 @@ public class StateMachine : Cycle
   
   public override void Create(){
     
+    screenData.SetFrame();
+
+
+    upperData.transform.position = screenData.topLeft;
+    subStateData.transform.position = screenData.bottomLeft + screenData.up *(states.Length+1) * .2f;
+
+    
+    pushButton1.transform.position = screenData.bottomRight;
+    pushButton1.transform.position += screenData.up * pushButton1.transform.localScale.y * .5f;
+    pushButton1.transform.position += -screenData.right * pushButton1.transform.localScale.x  * .5f;
+    
+
+
     maps = new GameObject[states.Length];
     for( int i = 0; i < states.Length; i++ ){
       
       maps[i] = Instantiate(mapPrefab);
-      maps[i].transform.position = title.gameObject.transform.position;
+      maps[i].transform.position =  screenData.bottomLeft; //title.gameObject.transform.position;
 
-      maps[i].transform.position += Vector3.up * (-.2f * i + .8f);
+      maps[i].transform.position += screenData.up  * .2f * i;
       maps[i].GetComponent<Renderer>().enabled = true;
-     // maps[i]
-
+    
       Cycles.Add(states[i]);
 
     }

@@ -77,7 +77,7 @@ public class PlaceParticlesOnMesh : LifeForm {
 
 
   public override void OnGestated(){
-    print( particles._buffer);
+//    print( particles._buffer);
     particles.Embody( mesh );
   }
   
@@ -131,6 +131,12 @@ public class PlaceParticlesOnMesh : LifeForm {
 
   }
 
+
+  public void Clear(){
+    float[] values = new float[particles.count * particles.structSize];
+    particles.SetData( values ); 
+  }
+
   void SetParticleInfo(int id){
     float[] values = new float[particles.structSize];
 
@@ -153,7 +159,6 @@ public class PlaceParticlesOnMesh : LifeForm {
     values[4] = 0;
     values[5] = 0;
 
-    print( trace.hitNormal );
     values[6] = trace.hitNormal.x;
     values[7] = trace.hitNormal.y;
     values[8] = trace.hitNormal.z;
@@ -179,14 +184,14 @@ public class PlaceParticlesOnMesh : LifeForm {
     values[22] = 0;
     values[23] = 0;
 
-    print( particles.structSize);
-    print("hmmmmm");
+    //print( particles.structSize);
+  //  print("hmmmmm");
     particles._buffer.SetData( values , 0 , id * particles.structSize , 24 );
 
   }
 
   public override void Activate(){
-    print("loading");
+//    print("loading");
    // Saveable.Load(particles,"DNA/"+fileName); 
   }
 

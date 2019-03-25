@@ -31,15 +31,20 @@ public class Themes : State
    }
 
    SetActiveTheme();
-
+   SetTitles();
 
   }
 
 
-  void SetActiveTheme(){
+  public void SetActiveTheme(){
     body.render.material = themes[activeTheme].bodyMat;
     background.material = themes[activeTheme].skyboxMat;
     platform.material = themes[activeTheme].platformMat;
+
+  }
+
+
+  void SetTitles(){
 
     stateMachine.SetTitle(themes[activeTheme].themeName);
     stateMachine.SetInfo(activeTheme,themes.Length);

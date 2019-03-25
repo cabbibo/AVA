@@ -212,6 +212,8 @@ float[] values = new float[count*structSize];
 
     float[] data = new float[count*structSize];
 
+    print( count );
+
     for( int i = 0; i < (dna.Length/7); i++ ){
       data[i*24+14] = dna[i*7+0];
       data[i*24+15] = dna[i*7+1];
