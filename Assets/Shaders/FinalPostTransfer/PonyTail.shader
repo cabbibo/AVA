@@ -1,4 +1,4 @@
-﻿Shader "Final/PonyTail" {
+﻿Shader "Finals/PonyTail" {
   Properties {
 
 
