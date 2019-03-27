@@ -1,6 +1,6 @@
 ﻿
-#pragma kernel Transfer
 
+#pragma kernel Transfer
 struct Vert{
     float3 pos;
     float3 vel;
@@ -11,19 +11,17 @@ struct Vert{
 };
 
 
-struct Particle{
-    float3 pos;
-    float3 vel;
-    float3 nor;
-    float3 tangent;
-    float2 uv;
-    float2 debug;
-};
-
-
-
-
-
+    struct Particle{
+      float3 pos;
+      float3 vel;
+      float3 nor;
+      float3 tan;
+      float2 uv;
+      float used;
+      float3 triIDs;
+      float3 triWeights;
+      float3 debug;
+    };
 RWStructuredBuffer<Vert> _VertBuffer;
 RWStructuredBuffer<Particle> _SkeletonBuffer;
 
@@ -54,15 +52,16 @@ void Transfer (uint threadID : SV_GroupIndex, uint3 u3GroupID : SV_GroupID) {
     float3 fPos; float2 fUV; float3 fNor; float2 fDebug; float3 fVel; float3 fTang;
 
     fVel = p.vel;
+    fNor = p.nor;
 
-    float3 x = normalize(cross(_CameraForward , normalize(p.vel))); //_CameraRight;
-    float3 y = normalize(cross(_CameraForward , x )) * 1.6;//_CameraUp;
-    float r = _Radius  * min( p.debug.x , (1-p.debug.x));
+    float3 x = normalize(cross(_CameraUp, normalize(p.nor))); //_CameraRight;
+    float3 y = -normalize(cross(p.nor , x ));//_CameraUp;
+    float r = _Radius;//  * min( p.debug.x , (1-p.debug.x));
 
 
     fTang = x;
 
-    fPos = p.pos;
+    fPos = p.pos ;
 
     fDebug = float2(1,1);
     fUV = float2(0,0);
@@ -71,19 +70,20 @@ void Transfer (uint threadID : SV_GroupIndex, uint3 u3GroupID : SV_GroupID) {
 
    
     if( which == 0 ){
-      fPos = p.pos - x * r - y * r;
+      fPos = p.pos + fNor * .03- x * r - y * r;
+      fPos = p.pos + fNor * .03- x * r - y * r;
       fUV = float2( 0, 0); 
       fDebug = float2( float(transferID) , 0 );
-    }else if( which  == 1 ){
-      fPos = p.pos + x * r - y * r;
+    }else if( which  == 2 ){
+      fPos = p.pos + fNor * .03+ x * r - y * r;
       fDebug = float2( float(transferID) , 0 );
       fUV = float2( 1 , 0 );
-    }else if( which == 2 ){
-      fPos = p.pos - x * r + y * r;
+    }else if( which == 1 ){
+      fPos = p.pos + fNor * .03- x * r + y * r;
       fDebug = float2( float(transferID) , 0 );
       fUV = float2( 0 , 1 );
     }else{
-      fPos = p.pos + x * r + y * r;
+      fPos = p.pos + fNor * .03+ x * r + y * r;
       fDebug = float2( float(transferID) , 0 );
       fUV = float2( 1 , 1 );
     }
@@ -93,6 +93,7 @@ void Transfer (uint threadID : SV_GroupIndex, uint3 u3GroupID : SV_GroupID) {
     _VertBuffer[pID].pos = fPos;
     _VertBuffer[pID].uv = fUV;
     _VertBuffer[pID].vel = fVel;
+    _VertBuffer[pID].nor = fNor;
     _VertBuffer[pID].tangent = fTang;
     _VertBuffer[pID].nor = normalize(cross(_CameraRight,_CameraUp));// fNor;
     _VertBuffer[pID].debug = fDebug;

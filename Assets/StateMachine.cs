@@ -186,7 +186,7 @@ public class StateMachine : Cycle
 
   public void verticalSwipe( float val ){
 
-    if( val > 0 ){
+    if( val < 0 ){
       downUp = true;
       swipeVal = val;
       horizontal = false;

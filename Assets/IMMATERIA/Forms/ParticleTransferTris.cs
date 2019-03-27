@@ -22,9 +22,9 @@ public class ParticleTransferTris : IndexForm {
         values[ index ++ ] = bID + 0;
         values[ index ++ ] = bID + 1;
         values[ index ++ ] = bID + 3;
-        values[ index ++ ] = bID + 2;
-        values[ index ++ ] = bID + 3;
         values[ index ++ ] = bID + 0;
+        values[ index ++ ] = bID + 3;
+        values[ index ++ ] = bID + 2;
     }
     SetData(values);
   }
