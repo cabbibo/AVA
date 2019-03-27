@@ -35,9 +35,12 @@ Shader "Final/BodyPost"
 			}
 
 			CGPROGRAM
-			#pragma vertex vert
-			#pragma fragment frag
-			#pragma multi_compile_fwdbase // shadows
+			  #pragma target 4.5
+            #pragma vertex vert
+            #pragma fragment frag
+           #pragma multi_compile_fwdbase nolightmap nodirlightmap nodynlightmap novertexlight
+
+            
 			#include "AutoLight.cginc"
 			#include "UnityCG.cginc"
       #include "../Chunks/noise.cginc"
@@ -85,24 +88,28 @@ Shader "Final/BodyPost"
 
   StructuredBuffer<Vert> _TransferBuffer;
 
-
-			struct vertexOutput
-			{
-				float4 pos : SV_POSITION;
-				float3 normal : NORMAL;
-				float2 uv: TEXCOORD0;
-				float3 world : TEXCOORD3;
-        float3 tan : TEXCOORD4;
-				float3 vel : TEXCOORD5;
-				LIGHTING_COORDS(1,2) // shadows
-			};
+               struct vertexOutput
+            {
+                float4 pos : SV_POSITION;
+                float3 normal : NORMAL;
+                float2 uv: TEXCOORD0;
+                float3 world : TEXCOORD1;
+                float3 tan : TEXCOORD2;
+                float3 vel : TEXCOORD3;
+                float3 closest : TEXCOORD4;
+                UNITY_SHADOW_COORDS(5)
+            };
 
 	
 			vertexOutput vert(uint id : SV_VertexID) {
 			
 
 
-				vertexOutput output;
+				
+                
+                vertexOutput output;
+
+UNITY_INITIALIZE_OUTPUT(vertexOutput, output);
 				Vert input = _TransferBuffer[id];
 
 				// convert input to world space
@@ -114,9 +121,9 @@ Shader "Final/BodyPost"
 				output.vel = input.vel;
         output.uv = input.uv;
 
-
-                TRANSFER_VERTEX_TO_FRAGMENT(output); // shadows
-				return output;
+   UNITY_TRANSFER_SHADOW(output,output.world);
+                //TRANSFER_VERTEX_TO_FRAGMENT(output); // shadows
+                return output;
 			}
 
 			float4 frag(vertexOutput v) : COLOR

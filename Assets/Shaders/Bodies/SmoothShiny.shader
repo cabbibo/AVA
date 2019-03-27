@@ -36,13 +36,21 @@ Shader "Bodies/SmoothShiny"
             }
 
             CGPROGRAM
+
+            #pragma target 4.5
             #pragma vertex vert
             #pragma fragment frag
-            #pragma multi_compile_fwdbase // shadows
+           #pragma multi_compile_fwdbase nolightmap nodirlightmap nodynlightmap novertexlight
+
+            
+
             #include "AutoLight.cginc"
             #include "UnityCG.cginc"
+
+
             #include "../Chunks/noise.cginc"
             #include "../Chunks/hsv.cginc"
+
 
             // Properties
              samplerCUBE _CubeMap;
@@ -94,42 +102,49 @@ struct Particle{
                 float4 pos : SV_POSITION;
                 float3 normal : NORMAL;
                 float2 uv: TEXCOORD0;
-                float3 world : TEXCOORD3;
-                float3 tan : TEXCOORD4;
-                float3 vel : TEXCOORD5;
-                float3 closest : TEXCOORD6;
-                LIGHTING_COORDS(1,2) // shadows
+                float3 world : TEXCOORD1;
+                float3 tan : TEXCOORD2;
+                float3 vel : TEXCOORD3;
+                float3 closest : TEXCOORD4;
+                UNITY_SHADOW_COORDS(5)
             };
 
     
             vertexOutput vert(uint id : SV_VertexID) {
             
 
-
                 vertexOutput output;
+
+UNITY_INITIALIZE_OUTPUT(vertexOutput, output);
                 Vert input = _TransferBuffer[id];
 
+                
                 // convert input to world space
+                
                 output.pos = mul(UNITY_MATRIX_VP, float4(input.pos,1));
+                
+
                 float4 normal4 = float4(input.nor, 0.0); // need float4 to mult with 4x4 matrix
+                
+
                 output.normal = input.nor;//normalize(mul(normal4, unity_WorldToObject).xyz);
                 output.tan = input.tang;//.w * normalize(mul(input.tan, unity_WorldToObject).xyz);
                 output.world = input.pos;// mul(unity_ObjectToWorld, input.vertex).xyz;
                 output.vel = input.vel;
                 output.uv = input.uv;
 
-                float3 closest = float3(1000000,0,0);
+                /*float3 closest = float3(1000000,0,0);
                 for( int i = 0; i < _DisformParticles_COUNT; i++ ){
 
                   Particle p  = _DisformParticles[i];
                   if( length(p.pos-input.pos) < length( closest)){
                     closest = p.pos - input.pos;
                   }
-                }
+                }*/
 
-                output.closest = closest;
-
-                TRANSFER_VERTEX_TO_FRAGMENT(output); // shadows
+                //output.closest = closest;
+                UNITY_TRANSFER_SHADOW(output,output.world);
+                //TRANSFER_VERTEX_TO_FRAGMENT(output); // shadows
                 return output;
             }
 
@@ -254,9 +269,9 @@ float3 regCol( float3 ro , float3 rd ){
         float radius = .1;
         float mult = 4;
 
-        float d = length( closest ) + .02 *noise( v.world * 100 );
+      //  float d = length( closest ) + .02 *noise( v.world * 100 );
 
-        if(  d < radius ){ col = lerp( col , regCol( v.world, eye) ,saturate( mult*(radius -d) / radius )) ; }
+        //if(  d < radius ){ col = lerp( col , regCol( v.world, eye) ,saturate( mult*(radius -d) / radius )) ; }
                 return float4(col.xyz, 1.0);
             }
 

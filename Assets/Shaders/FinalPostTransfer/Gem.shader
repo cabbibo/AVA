@@ -35,10 +35,13 @@ Shader "Final/Gem"
                 ZFail keep
             }
 
-            CGPROGRAM
+            CGPROGRAM  
+
+            #pragma target 4.5
             #pragma vertex vert
             #pragma fragment frag
-            #pragma multi_compile_fwdbase // shadows
+           #pragma multi_compile_fwdbase nolightmap nodirlightmap nodynlightmap novertexlight
+
             #include "AutoLight.cginc"
             #include "UnityCG.cginc"
       #include "../Chunks/noise.cginc"
@@ -78,15 +81,17 @@ struct Vert{
   StructuredBuffer<Vert> _TransferBuffer;
 
 
-            struct vertexOutput
+      
+               struct vertexOutput
             {
                 float4 pos : SV_POSITION;
                 float3 normal : NORMAL;
                 float2 uv: TEXCOORD0;
-                float3 world : TEXCOORD3;
-        float3 tan : TEXCOORD4;
-                float3 vel : TEXCOORD5;
-                LIGHTING_COORDS(1,2) // shadows
+                float3 world : TEXCOORD1;
+                float3 tan : TEXCOORD2;
+                float3 vel : TEXCOORD3;
+                float3 closest : TEXCOORD4;
+                UNITY_SHADOW_COORDS(5)
             };
 
     
@@ -95,6 +100,9 @@ struct Vert{
 
 
                 vertexOutput output;
+
+
+UNITY_INITIALIZE_OUTPUT(vertexOutput, output);
                 Vert input = _TransferBuffer[id];
 
                 // convert input to world space
@@ -106,7 +114,8 @@ struct Vert{
                 output.vel = input.vel;
 
 
-                TRANSFER_VERTEX_TO_FRAGMENT(output); // shadows
+                  UNITY_TRANSFER_SHADOW(output,output.world);
+                //TRANSFER_VERTEX_TO_FRAGMENT(output); // shadows
                 return output;
             }
 

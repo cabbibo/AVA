@@ -10,8 +10,12 @@ public class Saveable {
 
   public static void Save( Form form , string name ){
 
+
+ //check if directory doesn't exit
+
+ 
     BinaryFormatter bf = new BinaryFormatter();
-    FileStream stream = new FileStream(Application.streamingAssetsPath + "/"+name+".dna",FileMode.Create);
+    FileStream stream = new FileStream(Application.persistentDataPath + "/"+name+".dna",FileMode.Create);
 
     if( form.intBuffer ){
       int[] data = form.GetIntDNA();
@@ -27,13 +31,13 @@ public class Saveable {
   public static void Load(Form form , string name){
 
     Debug.Log( name );
-    if( File.Exists(Application.streamingAssetsPath  + "/"+name+".dna")){
+    if( File.Exists(Application.persistentDataPath  + "/"+name+".dna")){
       
       Debug.Log("loading from lodabale");
       BinaryFormatter bf = new BinaryFormatter();
-      //FileStream stream = new FileStream(Application.streamingAssetsPath  + "/"+name+".dna",FileMode.Open);
+      //FileStream stream = new FileStream(Application.persistentDataPath  + "/"+name+".dna",FileMode.Open);
 
-      FileStream stream = File.OpenRead(Application.streamingAssetsPath  + "/"+name+".dna");
+      FileStream stream = File.OpenRead(Application.persistentDataPath  + "/"+name+".dna");
       if( form.intBuffer ){
         int[] data = bf.Deserialize(stream) as int[];
         form.SetDNA(data);

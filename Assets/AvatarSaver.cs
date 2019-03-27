@@ -62,15 +62,23 @@ public class AvatarSaver : State
 
 
 
+ if(!Directory.Exists(Application.persistentDataPath + "/AVAS")){
+  Directory.CreateDirectory(Application.persistentDataPath + "/AVAS");
+ }
+
+  if(!Directory.Exists(Application.persistentDataPath + "/DNA")){
+  Directory.CreateDirectory(Application.persistentDataPath + "/DNA");
+ }
+
     for(int i = 0; i < avatars.Length; i++ ){ 
 
       string avatarFileName = "/AVAS/AVA_" + i +".ava";
 
       for( int j = 0; j < brushHolder.brushes.Length; j++ ){
         string fullName = "/DNA/" + brushHolder.brushes[j].name + "_" + i + ".dna";
-//        print( Application.streamingAssetsPath  +fullName );
+//        print( Application.persistentDataPath  +fullName );
 
-        if (System.IO.File.Exists(Application.streamingAssetsPath  +fullName)){
+        if (System.IO.File.Exists(Application.persistentDataPath  +fullName)){
 
   //        print("IT EXITS");
         }else{
@@ -82,15 +90,17 @@ public class AvatarSaver : State
       } 
 
 
-    //  print( "fullName:  " + Application.streamingAssetsPath  +avatarFileName);
-      if (System.IO.File.Exists(Application.streamingAssetsPath  +avatarFileName)){
+
+
+    //  print( "fullName:  " + Application.persistentDataPath  +avatarFileName);
+      if (System.IO.File.Exists(Application.persistentDataPath  +avatarFileName)){
       //  print("it exists");
       //do stuff
 
       
 //        Debug.Log("loading from lodabale");
         BinaryFormatter bf = new BinaryFormatter();
-        FileStream stream = File.OpenRead(Application.streamingAssetsPath  + avatarFileName);
+        FileStream stream = File.OpenRead(Application.persistentDataPath  + avatarFileName);
      
         avatars[i]  = bf.Deserialize(stream) as AvatarData;
        
@@ -189,7 +199,7 @@ public class AvatarSaver : State
 
 
       BinaryFormatter bf = new BinaryFormatter();
-      FileStream stream = new FileStream(Application.streamingAssetsPath + fileName,FileMode.Create);
+      FileStream stream = new FileStream(Application.persistentDataPath + fileName,FileMode.Create);
 
       bf.Serialize(stream,a);
 
@@ -204,11 +214,11 @@ public class AvatarSaver : State
 
       string avatarFileName = "/AVAS/AVA_" + activeAvatar +".ava";
       
-      if( File.Exists(Application.streamingAssetsPath  + avatarFileName )){
+      if( File.Exists(Application.persistentDataPath  + avatarFileName )){
       
         Debug.Log("loading from lodabale");
         BinaryFormatter bf = new BinaryFormatter();
-        FileStream stream = File.OpenRead(Application.streamingAssetsPath  + avatarFileName);
+        FileStream stream = File.OpenRead(Application.persistentDataPath  + avatarFileName);
      
         AvatarData ad  = bf.Deserialize(stream) as AvatarData;
         Load( ad );
