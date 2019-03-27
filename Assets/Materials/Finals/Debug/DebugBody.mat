@@ -7,9 +7,9 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Point 36 Debug blue
-  m_Shader: {fileID: 4800000, guid: 127e890c244372344b160e0221bd3e69, type: 3}
-  m_ShaderKeywords: Enable36Struct
+  m_Name: DebugBody
+  m_Shader: {fileID: 4800000, guid: 1d44d094bb04a4951b8f351dc578c1d7, type: 3}
+  m_ShaderKeywords: 
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
@@ -67,17 +67,11 @@ Material:
     - _Mode: 0
     - _OcclusionStrength: 1
     - _Parallax: 0.02
-    - _Size: 0.005
     - _SmoothnessTextureChannel: 0
     - _SpecularHighlights: 1
     - _SrcBlend: 1
-    - _Struct12: 0
-    - _Struct16: 0
-    - _Struct24: 0
-    - _Struct36: 1
-    - _Struct9: 0
     - _UVSec: 0
     - _ZWrite: 1
     m_Colors:
-    - _Color: {r: 0, g: 0.8848131, b: 1, a: 1}
+    - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}

@@ -14,7 +14,7 @@ public class Themes : State
   public MeshRenderer background;
   public MeshRenderer platform;
 
-  public override void Create(){
+  public override void OnLive(){
     SetActiveTheme();
 
   }
@@ -38,6 +38,7 @@ public class Themes : State
 
   public void SetActiveTheme(){
     body.render.material = themes[activeTheme].bodyMat;
+    body.Show();
     background.material = themes[activeTheme].skyboxMat;
     platform.material = themes[activeTheme].platformMat;
 

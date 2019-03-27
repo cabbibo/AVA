@@ -164,7 +164,7 @@ public class StateMachine : Cycle
       maps[i].transform.position =  screenData.bottomLeft; //title.gameObject.transform.position;
 
       maps[i].transform.position += screenData.up  * .2f * i;
-      maps[i].GetComponent<Renderer>().enabled = true;
+     // maps[i].GetComponent<Renderer>().enabled = true;
     
       Cycles.Add(states[i]);
 

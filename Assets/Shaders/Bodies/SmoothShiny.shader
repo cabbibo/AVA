@@ -92,7 +92,7 @@ struct Particle{
 };
 
   StructuredBuffer<Vert> _TransferBuffer;
-  StructuredBuffer<Particle> _DisformParticles;
+  //StructuredBuffer<Particle> _DisformParticles;
 
   int _DisformParticles_COUNT;
 
@@ -152,7 +152,7 @@ UNITY_INITIALIZE_OUTPUT(vertexOutput, output);
       uniform int _NumberSteps;
       uniform float  _IntersectionPrecision;
       uniform float _MaxTraceDistance;
-   float sdSphere( float3 p, float s ){
+ /*  float sdSphere( float3 p, float s ){
         return length(p)-s;
       }
 
@@ -218,27 +218,27 @@ float3 regCol( float3 ro , float3 rd ){
           float3 norm = calcNormal( pos );
           col = norm * .5 + .5;
   }
-  /*for( float i = 0; i < 10; i++ ){
+  for( float i = 0; i < 10; i++ ){
     float3 fPos = ro + rd * i * .1; 
     float n = noise( fPos * 50 );
     col += hsv( n , 1,1);
   }
-  col /= 3;*/
+  col /= 3;
   return col;
-}
+}*/
             float4 frag(vertexOutput v) : COLOR
             {
 
 
 
                float3 closest = float3(1000000,0,0);
-                for( int i = 0; i < _DisformParticles_COUNT; i++ ){
+                /*for( int i = 0; i < _DisformParticles_COUNT; i++ ){
 
                   Particle p  = _DisformParticles[i];
                   if( length(p.pos-v.world) < length( closest)){
                     closest = p.pos - v.world;
                   }
-                }
+                }*/
 
                // output.closest = closest;
 

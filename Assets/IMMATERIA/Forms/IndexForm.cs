@@ -13,8 +13,8 @@ public class IndexForm : Form {
 
   public override void WhileDebug(){
     debugMaterial.SetPass(0);
-    debugMaterial.SetBuffer("_vertBuffer", toIndex._buffer);
-    debugMaterial.SetBuffer("_triBuffer", _buffer);
+    debugMaterial.SetBuffer("_VertBuffer", toIndex._buffer);
+    debugMaterial.SetBuffer("_TriBuffer", _buffer);
     debugMaterial.SetInt("_Count",count);
     debugMaterial.SetInt("_VertCount",toIndex.count);
     Graphics.DrawProcedural(MeshTopology.Lines, (count-1) * 2 );
