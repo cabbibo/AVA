@@ -35,10 +35,10 @@ Shader "Final/BodyPost"
 			}
 
 			CGPROGRAM
-			  #pragma target 4.5
-            #pragma vertex vert
-            #pragma fragment frag
-           #pragma multi_compile_fwdbase nolightmap nodirlightmap nodynlightmap novertexlight
+			#pragma target 4.5
+      #pragma vertex vert
+      #pragma fragment frag
+      #pragma multi_compile_fwdbase nolightmap nodirlightmap nodynlightmap novertexlight
 
             
 			#include "AutoLight.cginc"
@@ -57,7 +57,7 @@ Shader "Final/BodyPost"
 			float _RampStart;
     
 
-    	struct Vert{
+    struct Vert{
 
       float3 pos;
       float3 vel;
@@ -86,19 +86,19 @@ Shader "Final/BodyPost"
     float _SparkleHue;
     float _SparkleBright;
 
-  StructuredBuffer<Vert> _TransferBuffer;
+    StructuredBuffer<Vert> _TransferBuffer;
 
-               struct vertexOutput
-            {
-                float4 pos : SV_POSITION;
-                float3 normal : NORMAL;
-                float2 uv: TEXCOORD0;
-                float3 world : TEXCOORD1;
-                float3 tan : TEXCOORD2;
-                float3 vel : TEXCOORD3;
-                float3 closest : TEXCOORD4;
-                UNITY_SHADOW_COORDS(5)
-            };
+         struct vertexOutput
+      {
+          float4 pos : SV_POSITION;
+          float3 normal : NORMAL;
+          float2 uv: TEXCOORD0;
+          float3 world : TEXCOORD1;
+          float3 tan : TEXCOORD2;
+          float3 vel : TEXCOORD3;
+          float3 closest : TEXCOORD4;
+          UNITY_SHADOW_COORDS(5)
+      };
 
 	
 			vertexOutput vert(uint id : SV_VertexID) {

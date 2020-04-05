@@ -36,11 +36,15 @@ Shader "Finals/OKToCry"
             }
 
             CGPROGRAM
+
+      #pragma target 4.5
             #pragma vertex vert
             #pragma fragment frag
-            #pragma multi_compile_fwdbase // shadows
-            #include "AutoLight.cginc"
-            #include "UnityCG.cginc"
+           #pragma multi_compile_fwdbase nolightmap nodirlightmap nodynlightmap novertexlight
+ 
+   #include "UnityCG.cginc"
+             #include "AutoLight.cginc"
+         
       #include "../Chunks/noise.cginc"
             #include "../Chunks/hsv.cginc"
 
@@ -84,9 +88,9 @@ struct Vert{
                 float3 normal : NORMAL;
                 float2 uv: TEXCOORD0;
                 float3 world : TEXCOORD3;
-        float3 tan : TEXCOORD4;
+                float3 tan : TEXCOORD4;
                 float3 vel : TEXCOORD5;
-                LIGHTING_COORDS(1,2) // shadows
+                UNITY_SHADOW_COORDS(1) // shadows
             };
 
     
@@ -95,6 +99,8 @@ struct Vert{
 
 
                 vertexOutput output;
+
+UNITY_INITIALIZE_OUTPUT(vertexOutput, output);
                 Vert input = _TransferBuffer[id];
 
                 // convert input to world space
@@ -117,7 +123,7 @@ struct Vert{
              
                 output.normal = fNor;
 
-                TRANSFER_VERTEX_TO_FRAGMENT(output); // shadows
+                UNITY_TRANSFER_SHADOW(output,output.world); // shadows
                 return output;
             }
 
@@ -153,7 +159,7 @@ struct Vert{
                col = bgCol;
                if( tCol.x > .3 ){ discard; }
 
-        fixed shadow = UNITY_SHADOW_ATTENUATION(v,v.world) * .9 + .1 ;
+        fixed shadow = UNITY_SHADOW_ATTENUATION(v,v.world ) * .9 + .1 ;
 
      
 

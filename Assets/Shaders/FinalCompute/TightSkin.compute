@@ -53,7 +53,7 @@ int _DisformParticles_COUNT;
 
 RWStructuredBuffer<Vert> _VertBuffer;
 RWStructuredBuffer<Bone> _SkeletonBuffer;
-RWStructuredBuffer<Particle> _DisformParticles;
+//RWStructuredBuffer<Particle> _DisformParticles;
 
 
 float _ReturnSpringStrength;
@@ -128,7 +128,7 @@ void Skin (uint threadID : SV_GroupIndex, uint3 u3GroupID : SV_GroupID) {
 //vert.pos = fPos;
 vert.nor = fNor;
 vert.tang = fTan;
-
+/*
 float3 force = 0;
 
 float3 dif = fPos - vert.pos;
@@ -147,9 +147,11 @@ vert.vel += force;
 vert.vel *= .7;
 
 
-vert.pos += vert.vel;
+vert.pos += vert.vel;*/
 
-//vert.pos = fPos;
+vert.vel = fPos - vert.pos;
+
+vert.pos = fPos;
 
 
 
